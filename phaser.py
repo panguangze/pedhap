@@ -1,0 +1,117 @@
+import sys
+from ped_utils import Trio
+from typing import Dict, Iterable, List, Optional, TextIO, Tuple
+from networkx.classes.function import selfloop_edges
+from vcf import VariantCallPhase, VariantTable
+from vcf import VcfReader
+import logging
+from pysam import VariantFile, VariantRecord
+logger = logging.getLogger(__name__)
+
+class Phaser(object):
+    def __init__(
+        self,
+        vcf_file: str,
+        out_file: TextIO = sys.stdout,
+        indels: bool = True,
+        max_coverage: int = 15,
+        tag: str = "PS",
+    ) -> None:
+        super().__init__()
+        self.vcf_file = vcf_file
+        self.out_file = out_file
+        self.vcf_reader = VcfReader(path = self.vcf_file, indels=indels, phases=True)
+        self.indels = indels
+        self.max_coverage = max_coverage
+        self.tag = tag
+        self.chromo_variant_table: Dict[str, VariantTable] = {}
+        self._variant_file = VariantFile(self.vcf_file)
+        self._writer = VariantFile(self.out_file, mode="w", header=self._variant_file.header)
+        self._reader_iter = iter(self._variant_file)
+        self._unprocessed_record: Optional[VariantRecord] = None
+        self._read_vcf()
+
+    def _read_vcf(self):
+        logger.info("Reading phased blocks from %r", self.vcf_reader.path)
+        for variant_table in self.vcf_reader:
+            self.chromo_variant_table[variant_table.chromosome] = variant_table
+
+    def phasing_trio_child(self,trio: Trio):
+        child = trio.child
+        dad = trio.dad
+        mom = trio.mom
+        print(child.id, dad.id, mom.id)
+
+        self.phasing_duo(child.id, dad.id)
+        self.phasing_duo(child.id, mom.id)
+
+    def phasing_trio_parent(self,trio: Trio):
+        child = trio.child
+        dad = trio.dad
+        mom = trio.mom
+        print(child.id, dad.id, mom.id)
+
+        self.phasing_duo(dad.id, child.id)
+        self.phasing_duo(mom.id, child.id)
+
+    def phasing_duo(self, s1: str, s2: str):
+        for chromo, v_t in self.chromo_variant_table.items():
+            v_t.phase_with_hete(s1, s2)
+
+    def write(self):
+        for chromo, v_t in self.chromo_variant_table.items():
+            sample_phases: Dict[str, Dict] = dict()
+            for sample in v_t.samples:
+                sample_phases[sample] = {}
+                for p in v_t.phases[v_t._sample_to_index[sample]]:
+                    sample_phases[sample][p.position] = p
+            prev_pos = None
+            for record in self._record_modifier(chromo):
+                pos = record.start
+                if not record.alts:
+                    continue
+                if len(record.alts) > 1:
+                    # we do not phase multiallelic sites currently
+                    continue
+                if pos == prev_pos:
+                    # duplicate position, skip it
+                    continue
+
+                for sample in v_t.samples:
+                    call = record.samples[sample]
+                    phase_info = sample_phases[sample][pos]
+                    self._set_PS(
+                        call, phase_info)
+                prev_pos = pos
+
+    def _record_modifier(self, chromosome: str):
+        for record in self._iterrecords(chromosome):
+            yield record
+            self._writer.write(record)
+
+    def _set_PS(
+        self,
+        call,
+        phase: VariantCallPhase
+    ):
+        # assert all(allele in [0, 1] for allele in phase.phase)
+        call["PS"] = phase.block_id
+        call["GT"] = tuple(phase.phase)
+        if phase.block_id != 0:
+            call.phased = True
+
+    def _iterrecords(self, chromosome: str) -> Iterable[VariantRecord]:
+        """Yield all records for the target chromosome"""
+        n = 0
+        if self._unprocessed_record is not None:
+            assert self._unprocessed_record.chrom == chromosome
+            yield self._unprocessed_record
+            n += 1
+        for record in self._reader_iter:
+            n += 1
+            if record.chrom != chromosome:
+                # save it for later
+                self._unprocessed_record = record
+                assert n != 1
+                return
+            yield record
