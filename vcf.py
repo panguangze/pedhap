@@ -8,7 +8,7 @@ import logging
 import itertools
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from os import EX_OSFILE, PathLike
+from os import EX_OSFILE, PathLike, set_inheritable
 from typing import List, Sequence, Dict, Tuple, Iterable, Optional, Union, TextIO, Iterator
 
 from pysam import VariantFile, VariantHeader, VariantRecord
@@ -300,10 +300,16 @@ class VariantTable:
                         phase1.block_id, o_side)
                 else:
                     phase1.block_id = -10101010
-                    if phase1.phase[0] != phase2.phase[0]:
-                        t = phase1.phase[0]
-                        phase1.phase[0] = phase2.phase[1]
-                        phase1.phase[1] = t
+                    if side == 0:
+                        if phase1.phase[0] != phase2.phase[0]:
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase2.phase[1]
+                            phase1.phase[1] = t
+                    else:
+                        if phase1.phase[0] == phase2.phase[0]:
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase2.phase[1]
+                            phase1.phase[1] = t
         homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
 

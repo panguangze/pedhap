@@ -28,7 +28,7 @@ class Phaser(object):
         self.chromo_variant_table: Dict[str, VariantTable] = {}
         self.chromos = []
         self._variant_file = VariantFile(self.vcf_file)
-        # self._writer = VariantFile(self.out_file, mode="w", header=self._variant_file.header)
+        self._writer = VariantFile(self.out_file, mode="w", header=self._variant_file.header)
         self._reader_iter = iter(self._variant_file)
         self._unprocessed_record: Optional[VariantRecord] = None
         self._read_vcf()
@@ -53,7 +53,7 @@ class Phaser(object):
         print(child.id, dad.id, mom.id)
 
         self.phasing_duo(child.id, dad.id, chromo, side = 0)
-        self.phasing_duo(child.id, mom.id, chromo, side = 0)
+        self.phasing_duo(child.id, mom.id, chromo, side = 1)
 
     def phasing_trio_parent(self,trio: Trio, chromo):
         child = trio.child
@@ -62,13 +62,12 @@ class Phaser(object):
         print(child.id, dad.id, mom.id)
 
         self.phasing_duo(dad.id, child.id, chromo, side = 0)
-        self.phasing_duo(mom.id, child.id, chromo, side = 1)
+        self.phasing_duo(mom.id, child.id, chromo, side = 0)
 
     def phasing_duo(self, s1: str, s2: str, chromo, side: int):
         v_t = self.chromo_variant_table[chromo]
         v_t.phase_with_hete(s1, s2)
         v_t.phase_with_homo(s1,s2, side=side)
-            
     def write_simple(self, s1):
         for chromo, v_t in self.chromo_variant_table.items():
             v_t.write(s1,self.out_file)

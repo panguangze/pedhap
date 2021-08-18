@@ -310,17 +310,17 @@ def down_to_up(all_trios: List[Trio], phaser: Phaser, chromo):
 
 def iter_phase(all_trios: List[Trio], phaser: Phaser):
     up_to_down(all_trios, phaser)
-    down_to_up(all_trios, phaser)
+    # down_to_up(all_trios, phaser)
 
 
 def main():
     parser = argparse.ArgumentParser("trio phase")
     parser.add_argument(
-        '-v', help='merged VCF file', required=False, dest='vcf_file')
+        '-v', help='merged VCF file', required=True, dest='vcf_file')
     parser.add_argument(
-        '-p', help='pedigree file', required=False, dest='ped_file')
+        '-p', help='pedigree file', required=True, dest='ped_file')
     parser.add_argument(
-        '-o', help='out phased vcf file', required=False, dest='out_file')
+        '-o', help='out phased vcf file', required=True, dest='out_file')
     parser.add_argument(
         '--max_round', help='max phasing iter times, if not given, decided by program', 
         required=False, default=0, type=int,
@@ -332,12 +332,13 @@ def main():
     for f in families:
         all_trios = ped_utils.get_trios(f)
         for chromo in phaser.chromos:
+            # up_to_down(all_trios, phaser, chromo)
+            # down_to_up(all_trios, phaser, chromo)
             while phaser.check_phasing_state(chromo):
                 up_to_down(all_trios, phaser, chromo)
                 down_to_up(all_trios, phaser, chromo)
-        # iter_phase(all_trios, phaser, args.max_round)
-    # phaser.write()
-    phaser.write_simple("s0210-1_FDHG190451805-1a")
+    phaser.write()
+    # phaser.write_simple("s0210-1_FDHG190451805-1a")
         # phaser.write_phased_result("s0210-1_FDHG190451805-1a", "/home/caronkey/Documents/cityu/pedhap/test/test2.out")
     # run_pedhap(variant_file=args.vcf_file,
     #            ped=args.ped_fle, output=args.out_file)
