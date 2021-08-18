@@ -78,8 +78,10 @@ def setup_pedigree(ped_path, samples):
 
     return trios, pedigree_samples
 
-def phase_s1_with_s2(s1,s2):
+
+def phase_s1_with_s2(s1, s2):
     pass
+
 
 def run_pedhap(
     variant_file: str,
@@ -118,7 +120,7 @@ def run_pedhap(
             raise CommandLineError(e)
 
         input_vcf = PhasedInputReader(
-            variant_file,indels=indels,)
+            variant_file, indels=indels,)
         show_phase_vcfs = input_vcf.has_vcfs
 
         # if --use-ped-samples is set, use only samples from PED file
@@ -138,7 +140,7 @@ def run_pedhap(
             # TODO should this be done in PhasedInputReader.__init__?
             input_vcf.read_vcfs()
 
-        for chromosome,variant_table in input_vcf.chromVaritables.items():
+        for chromosome, variant_table in input_vcf.chromVaritables.items():
             if (not chromosomes) or (chromosome in chromosomes):
                 logger.info("======== Working on chromosome %r", chromosome)
             else:
@@ -272,32 +274,43 @@ def find_mendelian_conflicts(trios, variant_table):
 # def phasing_trio_child(phaser: Phaser, trio: Trio, chromo: str):
 #     phaser.phasing_trio_child(chromo, trio)
 
-def up_to_down(all_trios: List[Trio], phaser: Phaser):
+
+def up_to_down(all_trios: List[Trio], phaser: Phaser, chromo):
     # find top level trio and phsing child
     top_level_trios = ped_utils.get_top_level_trios(all_trios)
     # t = top_level_trios[0]
     # phaser.phasing_trio_child(t)
     for t in top_level_trios:
-        phaser.phasing_trio_child(t)
-    next_level_trios = ped_utils.get_next_level_trios(all_trios,top_level_trios)
+        phaser.phasing_trio_child(t, chromo)
+    next_level_trios = ped_utils.get_next_level_trios(
+        all_trios, top_level_trios)
     while len(next_level_trios) != 0:
         for t in next_level_trios:
-            phaser.phasing_trio_child(t)
-        next_level_trios = ped_utils.get_next_level_trios(all_trios,next_level_trios)
+            phaser.phasing_trio_child(t, chromo)
+        next_level_trios = ped_utils.get_next_level_trios(
+            all_trios, next_level_trios)
 
-def down_to_up(all_trios: List[Trio], phaser: Phaser):
+
+def down_to_up(all_trios: List[Trio], phaser: Phaser, chromo):
     # find bottom level trio and phsing child
     bottom_level_trios = ped_utils.get_bottom_level_trios(all_trios)
     # t = top_level_trios[0]
     # phaser.phasing_trio_child(t)
     # phaser.write_phased_result(t.child.id, "/home/caronkey/Documents/cityu/pedhap/test/test2.out")
     for t in bottom_level_trios:
-        phaser.phasing_trio_parent(t)
-    prev_level_trios = ped_utils.get_prev_level_trios(all_trios,bottom_level_trios)
+        phaser.phasing_trio_parent(t, chromo)
+    prev_level_trios = ped_utils.get_prev_level_trios(
+        all_trios, bottom_level_trios)
     while len(prev_level_trios) != 0:
         for t in prev_level_trios:
-            phaser.phasing_trio_parent(t)
-        prev_level_trios = ped_utils.get_prev_level_trios(all_trios,prev_level_trios)
+            phaser.phasing_trio_parent(t, chromo)
+        prev_level_trios = ped_utils.get_prev_level_trios(
+            all_trios, prev_level_trios)
+
+
+def iter_phase(all_trios: List[Trio], phaser: Phaser):
+    up_to_down(all_trios, phaser)
+    down_to_up(all_trios, phaser)
 
 
 def main():
@@ -308,17 +321,23 @@ def main():
         '-p', help='pedigree file', required=False, dest='ped_file')
     parser.add_argument(
         '-o', help='out phased vcf file', required=False, dest='out_file')
+    parser.add_argument(
+        '--max_round', help='max phasing iter times, if not given, decided by program', 
+        required=False, default=0, type=int,
+        dest='max_round')
     args = parser.parse_args()
 
-    phaser = Phaser(vcf_file = args.vcf_file,out_file=args.out_file)
+    phaser = Phaser(vcf_file=args.vcf_file, out_file=args.out_file, max_round = int(args.max_round))
     families = ped.open_ped(args.ped_file)
     for f in families:
         all_trios = ped_utils.get_trios(f)
-        up_to_down(all_trios, phaser)
-        # down_to_up(all_trios, phaser)
-        # up_to_down(all_trios, phaser)
-        # down_to_up(all_trios, phaser)
-        phaser.write()
+        for chromo in phaser.chromos:
+            while phaser.check_phasing_state(chromo):
+                up_to_down(all_trios, phaser, chromo)
+                down_to_up(all_trios, phaser, chromo)
+        # iter_phase(all_trios, phaser, args.max_round)
+    # phaser.write()
+    phaser.write_simple("s0210-1_FDHG190451805-1a")
         # phaser.write_phased_result("s0210-1_FDHG190451805-1a", "/home/caronkey/Documents/cityu/pedhap/test/test2.out")
     # run_pedhap(variant_file=args.vcf_file,
     #            ped=args.ped_fle, output=args.out_file)

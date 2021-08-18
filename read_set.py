@@ -1,3 +1,6 @@
+from pedigree import Trio
+
+
 class Read:
     def __init__(
         self,
@@ -9,6 +12,7 @@ class Read:
         self.covered_blocks = {}
         self.blocks = []
         self.block_reverses = []
+        self.uncertain_blocks = []
     def set_covered_block(self, b_id: int, side: int):
         if b_id in self.covered_blocks.keys():
             item = self.covered_blocks[b_id]
@@ -22,19 +26,19 @@ class Read:
 
     def init_blocks(self):
         for k, v in sorted(self.covered_blocks.items()):
-            need_reverse = False
-            if v[1] > v[0]:
-                need_reverse = True
             if v[1] == v[0]:
-                print("can't distinction")
-                continue
-            self.blocks.append(k)
-            self.block_reverses.append(need_reverse)
+                self.uncertain_blocks.append(k)
+            else:
+                need_reverse = False
+                if v[1] > v[0]:
+                    need_reverse = True
+                self.blocks.append(k)
+                self.block_reverses.append(need_reverse)
         self.blocks.append(-self.block_id)
         self.block_reverses.append(False)
 
     def get_blocks_info(self):
-        return self.blocks, self.block_reverses
+        return self.blocks, self.block_reverses, self.uncertain_blocks
 
 
 class ReadSet(object):
@@ -42,6 +46,15 @@ class ReadSet(object):
         self.reverse_info = {}
         self.father_dict = {}
         self.size_dict = {}
+        self.uncertain_blocks = []
+
+    def contains_phasing_info(self):
+        tag = False
+        for k, v in self.size_dict.items():
+            if v > 2:
+                tag = True
+        return tag
+    
 
     def get_phase_id(self, block_id):
         if block_id not in self.reverse_info.keys():
@@ -51,7 +64,10 @@ class ReadSet(object):
 
     def add_read(self, read: Read):
         read.init_blocks()
-        block_ids, reverses = read.blocks, read.block_reverses
+        block_ids, reverses, uncertain_blocks = read.get_blocks_info()
+        for b in uncertain_blocks:
+            if b not in self.uncertain_blocks:
+                self.uncertain_blocks.append(b)
         # 如果第一个block已经存在并且有冲突
         first_block = block_ids[0]
         if first_block in self.reverse_info.keys():
