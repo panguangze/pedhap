@@ -1,7 +1,6 @@
 import sys
 from ped_utils import Trio
 from typing import Dict, Iterable, List, Optional, TextIO, Tuple
-from networkx.classes.function import selfloop_edges
 from vcf import VariantCallPhase, VariantTable
 from vcf import VcfReader
 import logging

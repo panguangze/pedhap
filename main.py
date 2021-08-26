@@ -1,23 +1,13 @@
 import argparse
 from phaser import Phaser
-from family import Family
 import logging
-import sys
-import platform
-from collections import defaultdict
-from contextlib import ExitStack
-from typing import Optional, List, TextIO
-from vcf import VcfError
-from graph import ComponentFinder
+from typing import List 
 from pedigree import (
-    PedReader,
     mendelian_conflict,
 )
 import ped
 import ped_utils
 from ped_utils import Trio
-from timer import StageTimer
-from utils import plural_s, warn_once, NumericSampleIds
 logger = logging.getLogger(__name__)
 
 def find_mendelian_conflicts(trios, variant_table):
