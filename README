@@ -1,0 +1,2 @@
+python main.py -v test/test.vcf.gz -p test/test.ped -o test/test.out
+There's a ped file demo in test content
