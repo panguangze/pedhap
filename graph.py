@@ -13,19 +13,6 @@ class Node:
 
 
 class ComponentFinder:
-    """
-    Find connected components. A ComponentFinder is initialized with a list of
-    values. These are initially partitioned such that each value is in a
-    separate set. By calling merge(x, y), the two sets containing values x and
-    y are merged. Calling find(x) returns a "representative" value of the set
-    that value x is in. x and y are in the same set iff find(x) == find(y).
-    The representative is always the minimum value of the set.
-
-    This implements a variant of the Union-Find algorithm, but without the
-    "union by rank" strategy since we want the smallest node to be the
-    representative. It could perhaps be optimized, but this function is not
-    the current bottleneck.
-    """
 
     def __init__(self, values):
         self.nodes = {x: Node(x, None) for x in values}
