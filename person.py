@@ -17,6 +17,7 @@ class Person(object):
         self.phenotype = phenotype
         self.data = args
         self.inferred = kwargs.get('inferred', False)
+        # print(self.sex,"xxxxxx")
         
         if self.sex not in self.male_codes | self.female_codes | self.unknown_codes:
             raise ValueError('unknown sex code: {}'.format(self.sex))

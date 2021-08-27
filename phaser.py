@@ -49,7 +49,7 @@ class Phaser(object):
         child = trio.child
         dad = trio.dad
         mom = trio.mom
-        print(child.id, dad.id, mom.id)
+        # print(child.id, dad.id, mom.id)
 
         self.phasing_duo(child.id, dad.id, chromo, side = 0)
         self.phasing_duo(child.id, mom.id, chromo, side = 1)
@@ -58,7 +58,7 @@ class Phaser(object):
         child = trio.child
         dad = trio.dad
         mom = trio.mom
-        print(child.id, dad.id, mom.id)
+        # print(child.id, dad.id, mom.id)
 
         self.phasing_duo(dad.id, child.id, chromo, side = 0)
         self.phasing_duo(mom.id, child.id, chromo, side = 0)
