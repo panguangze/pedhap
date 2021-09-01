@@ -38,8 +38,8 @@ class Read:
             item[1] = item[1] + 1
 
     def init_blocks(self):
-        if len(self.covered_blocks) <2:
-            return
+        # if len(self.covered_blocks) <2:
+        #     return
         for k, v in sorted(self.covered_blocks.items()):
             if v[1] == v[0] or abs(v[1] - v[0]) <=5:
                 self.uncertain_blocks.append(k)
