@@ -62,7 +62,7 @@ class Phaser(object):
         #     v_t.adjust_confilict(insect_poses,child.id)
 
         fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
-        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=0)
+        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
 
         f_m_insect = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
         f_mh_insect = list(set(f_confilict_poses).intersection(set(mh_confilict_poses)))
