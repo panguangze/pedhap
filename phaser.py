@@ -54,15 +54,15 @@ class Phaser(object):
         # self.phasing_duo(child.id, dad.id, chromo, side = 0)
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
         v_t = self.chromo_variant_table[chromo]
-        f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
-        m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
+        # f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
+        # m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
 
         # if f_confilict_poses and m_confilict_poses:
         #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
         #     v_t.adjust_confilict(insect_poses,child.id)
 
-        fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
-        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
+        # fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
+        # mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
 
         f_m_insect = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
         f_mh_insect = list(set(f_confilict_poses).intersection(set(mh_confilict_poses)))
@@ -74,7 +74,7 @@ class Phaser(object):
         insects = insects+ f_mh_insect
         insects = insects+ fh_m_insect
         insects = insects+ fh_mh_insect
-        v_t.adjust_confilict(insects,child.id)
+        # v_t.adjust_confilict(insects,child.id)
 
 
 # if fh_confilict_poses and mh_confilict_poses:
