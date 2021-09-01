@@ -312,7 +312,7 @@ class VariantTable:
                     #         phase1.phase[0] = phase2.phase[1]
                     #         phase1.phase[1] = t
         homo_read_set.add_read(r)
-        # self.extend_by_readset(sample1, homo_read_set)
+        self.extend_by_readset(sample1, homo_read_set)
         return homo_read_set.confilict_poses
 
     def adjust_confilict(self,confilict_poses: [],sample: str):
@@ -372,13 +372,13 @@ class VariantTable:
                 heter_read_map[phase2.block_id].set_covered_block(
                     phase1.block_id, o_side, phase1.position)
             else:
-                pass
-                # phase1.block_id = -phase2.block_id
-                # phase1.phase = phase2.phase
+                # pass
+                phase1.block_id = -phase2.block_id
+                phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
-        # self.extend_by_readset(sample1, heter_read_set)
+        self.extend_by_readset(sample1, heter_read_set)
         return heter_read_set.confilict_poses
 
 
