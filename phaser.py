@@ -69,7 +69,7 @@ class Phaser(object):
             v_t.adjust_confilict(insect_poses,child.id)
 
 
-def phasing_trio_parent(self,trio: Trio, chromo):
+    def phasing_trio_parent(self,trio: Trio, chromo):
         child = trio.child
         dad = trio.dad
         mom = trio.mom
