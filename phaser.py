@@ -55,7 +55,7 @@ class Phaser(object):
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
         v_t = self.chromo_variant_table[chromo]
         f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
-        m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
+        # m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
 
         # if f_confilict_poses and m_confilict_poses:
         #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
