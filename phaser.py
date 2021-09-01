@@ -54,19 +54,19 @@ class Phaser(object):
         # self.phasing_duo(child.id, dad.id, chromo, side = 0)
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
         v_t = self.chromo_variant_table[chromo]
-        f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
-        m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
-
-        if f_confilict_poses and m_confilict_poses:
-            insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
-            v_t.adjust_confilict(insect_poses,child.id)
-
-        fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
-        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=0)
-
-        if fh_confilict_poses and mh_confilict_poses:
-            insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
-            v_t.adjust_confilict(insect_poses,child.id)
+        # f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
+        # m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
+        #
+        # if f_confilict_poses and m_confilict_poses:
+        #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
+        #     v_t.adjust_confilict(insect_poses,child.id)
+        #
+        # fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
+        # mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=0)
+        #
+        # if fh_confilict_poses and mh_confilict_poses:
+        #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
+        #     v_t.adjust_confilict(insect_poses,child.id)
 
 
     def phasing_trio_parent(self,trio: Trio, chromo):
@@ -124,7 +124,6 @@ class Phaser(object):
     ):
         # assert all(allele in [0, 1] for allele in phase.phase)
         call["PS"] = phase.block_id
-        print(phase.position)
         call["GT"] = tuple(phase.phase)
         if phase.is_homo():
             call.phased = False
