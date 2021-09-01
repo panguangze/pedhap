@@ -372,9 +372,9 @@ class VariantTable:
                 heter_read_map[phase2.block_id].set_covered_block(
                     phase1.block_id, o_side, phase1.position)
             else:
-                # pass
-                phase1.block_id = -phase2.block_id
-                phase1.phase = phase2.phase
+                pass
+                # phase1.block_id = -phase2.block_id
+                # phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
