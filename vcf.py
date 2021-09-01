@@ -312,6 +312,7 @@ class VariantTable:
                             phase1.phase[1] = t
         homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
+        return homo_read_set.confilict_poses
 
     def adjust_confilict(self,confilict_poses: [],sample: str):
         try:
