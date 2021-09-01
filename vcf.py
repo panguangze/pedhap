@@ -51,6 +51,16 @@ class Genotype(object):
         return self.alleles[0] == self.alleles[1]
 
 
+def mendelian_conflict(genotypem, genotypef, genotypec):
+    alleles_m = genotypem
+    alleles_f = genotypef
+    alleles_c = genotypec
+    if alleles_c[0] in alleles_m and alleles_c[1] in alleles_f:
+        return False
+    elif alleles_c[1] in alleles_m and alleles_c[0] in alleles_f:
+        return False
+    else:
+        return True
 class VcfVariant:
     """A variant in a VCF file (not to be confused with core.Variant)"""
 
@@ -145,6 +155,27 @@ class VariantTable:
 
     def __len__(self) -> int:
         return len(self.phases[0])
+
+    def check_mendel_conflict(self, c, f, m):
+
+        try:
+            c_index = self._sample_to_index[c]
+            f_index = self._sample_to_index[f]
+            m_index = self._sample_to_index[m]
+            c_phases = self.phases[c_index]
+            f_phases = self.phases[f_index]
+            m_phases = self.phases[m_index]
+        except KeyError:
+                return
+        mendelian_conflicts = []
+        for index, (gt_mother, gt_father, gt_child) in enumerate(
+                zip(m_phases, f_phases, c_phases)
+        ):
+            # if (not gt_mother.phase) and (not gt_father.is_none()) and (not gt_child.is_none()):
+            if mendelian_conflict(gt_mother.phase, gt_father.phase, gt_child.phase):
+                mendelian_conflicts.append(gt_child.position)
+        logger.info(f"{len(mendelian_conflicts)} for contig {self.chromosome}")
+        # return mendelian_conflicts
 
     def write(self, s, out):
         f = open(out, "w")
@@ -264,6 +295,8 @@ class VariantTable:
                 t = i.phase[0]
                 i.phase[0] = i.phase[1]
                 i.phase[1] = t
+        # print("end")
+
 
     def phase_with_homo(
         self,
@@ -284,7 +317,7 @@ class VariantTable:
         # if s1 and s2 unphased in prev round, skip
         if not s1_prev_phasing_state and not s2_prev_phasing_state:
             logging.info(f"Skip phasing {sample1} with {sample2} due to both of them unchanged in prev round")
-            return
+            # return
         homo_read_set = ReadSet()
         r = Read(mapq, -10101010)
         for i, phase2 in enumerate(self.phases[sample2_index]):

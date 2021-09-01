@@ -41,7 +41,7 @@ class Read:
         # if len(self.covered_blocks) <2:
         #     return
         for k, v in sorted(self.covered_blocks.items()):
-            if v[1] == v[0] or abs(v[1] - v[0]) <=5:
+            if v[1] == v[0] or abs(v[1] - v[0]) <=8:
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
@@ -75,7 +75,7 @@ class ReadSet(object):
 
     def get_phase_id(self, block_id):
         if block_id not in self.reverse_info.keys():
-            return (0, -1)
+            return (0, 0)
         else:
             return (self.find(block_id), self.reverse_info[block_id])
 
