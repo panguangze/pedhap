@@ -299,17 +299,18 @@ class VariantTable:
                     r.set_covered_block(
                         phase1.block_id, o_side,phase1.position)
                 else:
-                    phase1.block_id = -10101010
-                    if side == 0:
-                        if phase1.phase[0] != phase2.phase[0]:
-                            t = phase1.phase[0]
-                            phase1.phase[0] = phase2.phase[1]
-                            phase1.phase[1] = t
-                    else:
-                        if phase1.phase[0] == phase2.phase[0]:
-                            t = phase1.phase[0]
-                            phase1.phase[0] = phase2.phase[1]
-                            phase1.phase[1] = t
+                    pass
+                    # phase1.block_id = -10101010
+                    # if side == 0:
+                    #     if phase1.phase[0] != phase2.phase[0]:
+                    #         t = phase1.phase[0]
+                    #         phase1.phase[0] = phase2.phase[1]
+                    #         phase1.phase[1] = t
+                    # else:
+                    #     if phase1.phase[0] == phase2.phase[0]:
+                    #         t = phase1.phase[0]
+                    #         phase1.phase[0] = phase2.phase[1]
+                    #         phase1.phase[1] = t
         homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
         return homo_read_set.confilict_poses
@@ -371,8 +372,9 @@ class VariantTable:
                 heter_read_map[phase2.block_id].set_covered_block(
                     phase1.block_id, o_side, phase1.position)
             else:
-                phase1.block_id = -phase2.block_id
-                phase1.phase = phase2.phase
+                pass
+                # phase1.block_id = -phase2.block_id
+                # phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)

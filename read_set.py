@@ -30,7 +30,7 @@ class Read:
 
     def init_blocks(self):
         for k, v in sorted(self.covered_blocks.items()):
-            if v[1] == v[0] or abs(v[1] - v[0]) <= 3:
+            if v[1] == v[0] or abs(v[1] - v[0]) <= 8:
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
