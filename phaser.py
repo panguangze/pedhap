@@ -94,7 +94,7 @@ class Phaser(object):
     def phasing_duo(self, s1: str, s2: str, chromo, side: int):
         v_t = self.chromo_variant_table[chromo]
         v_t.phase_with_hete(s1, s2)
-        # v_t.phase_with_homo(s1,s2, side=side)
+        v_t.phase_with_homo(s1,s2, side=side)
     def write_simple(self, s1):
         for chromo, v_t in self.chromo_variant_table.items():
             v_t.write(s1,self.out_file)
