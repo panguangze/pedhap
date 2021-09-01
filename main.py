@@ -88,8 +88,8 @@ def main():
         for chromo in phaser.chromos:
             # up_to_down(all_trios, phaser, chromo)
             # down_to_up(all_trios, phaser, chromo)
-            while phaser.check_phasing_state(chromo):
-                up_to_down(all_trios, phaser, chromo)
+            # while phaser.check_phasing_state(chromo):
+            up_to_down(all_trios, phaser, chromo)
                 # down_to_up(all_trios, phaser, chromo)
     phaser.write()
     # phaser.write_simple("s0210-1_FDHG190451805-1a")
