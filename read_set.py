@@ -14,7 +14,7 @@ class Read:
         self.block_reverses = []
         self.uncertain_blocks = []
         self.support_situation = {0: [], 1: []}
-        self.confilict_side = 0
+        self.confilict_side = 1
 
     def set_covered_block(self, b_id: int, side: int, pos: int):
         self.support_situation[side].append(pos)
@@ -36,7 +36,7 @@ class Read:
                 need_reverse = False
                 if v[1] > v[0]:
                     need_reverse = True
-                    self.confilict_side = 1;
+                    self.confilict_side = 0;
                 self.blocks.append(k)
                 self.block_reverses.append(need_reverse)
         self.blocks.append(-self.block_id)
