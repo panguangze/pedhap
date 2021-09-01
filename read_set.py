@@ -13,16 +13,25 @@ class Read:
         self.blocks = []
         self.block_reverses = []
         self.uncertain_blocks = []
-        self.support_situation = {0: [], 1: []}
-        self.confilict_side = 1
+        self.support_situation = {}
+        self.confilict_side = {}
+
+    def get_confilict_poses(self):
+        res = []
+        for k in self.confilict_side.keys():
+            res = res + self.support_situation[k][self.confilict_side[k]]
+        return res
 
     def set_covered_block(self, b_id: int, side: int, pos: int):
-        self.support_situation[side].append(pos)
+        # self.support_situation[side].append(pos)
         if b_id in self.covered_blocks.keys():
             item = self.covered_blocks[b_id]
         else:
+            self.support_situation[b_id] = {0:[],1:[]}
+            # self.confilict_side[b_id] = {}
             self.covered_blocks[b_id] = [0, 0]
             item = self.covered_blocks[b_id]
+        self.support_situation[b_id][side].append(pos)
         if side == 0:
             item[0] = item[0] + 1
         else:
@@ -30,13 +39,14 @@ class Read:
 
     def init_blocks(self):
         for k, v in sorted(self.covered_blocks.items()):
-            if v[1] == v[0] or abs(v[1] - v[0]) <=6:
+            if v[1] == v[0] or abs(v[1] - v[0]) <=5:
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
+                self.confilict_side[k] = 1
                 if v[1] > v[0]:
                     need_reverse = True
-                    self.confilict_side = 0;
+                    self.confilict_side[k] = 0
                 self.blocks.append(k)
                 self.block_reverses.append(need_reverse)
         self.blocks.append(-self.block_id)
@@ -70,7 +80,7 @@ class ReadSet(object):
     def add_read(self, read: Read):
         read.init_blocks()
         block_ids, reverses, uncertain_blocks = read.get_blocks_info()
-        self.confilict_poses = self.confilict_poses + read.support_situation[read.confilict_side]
+        self.confilict_poses = self.confilict_poses + read.get_confilict_poses()
         for b in uncertain_blocks:
             if b not in self.uncertain_blocks:
                 self.uncertain_blocks.append(b)
