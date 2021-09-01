@@ -297,7 +297,7 @@ class VariantTable:
                     if phase2.phase[0] == phase1.phase[1]:
                         o_side = abs(side - 1)
                     r.set_covered_block(
-                        phase1.block_id, o_side)
+                        phase1.block_id, o_side,phase1.position)
                 else:
                     phase1.block_id = -10101010
                     if side == 0:
@@ -312,6 +312,18 @@ class VariantTable:
                             phase1.phase[1] = t
         homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
+
+    def adjust_confilict(self,confilict_poses: [],sample: str):
+        try:
+            sample_index = self._sample_to_index[sample]
+            sample1_phases = self.phases[sample_index]
+        except KeyError:
+            return
+        for i, phase in enumerate(sample1_phases):
+            if phase.position in confilict_poses:
+                tmp = phase.phase[0]
+                phase.phase[0] = phase.phase[1]
+                phase.phase[1] = tmp
 
     def phase_with_hete(
         self,
@@ -356,7 +368,7 @@ class VariantTable:
                 if phase2.phase[0] == phase1.phase[1]:
                     o_side = abs(side-1)
                 heter_read_map[phase2.block_id].set_covered_block(
-                    phase1.block_id, o_side)
+                    phase1.block_id, o_side, phase1.position)
             else:
                 phase1.block_id = -phase2.block_id
                 phase1.phase = phase2.phase
@@ -364,6 +376,7 @@ class VariantTable:
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
         self.extend_by_readset(sample1, heter_read_set)
+        return heter_read_set.confilict_poses
 
 
 class VcfReader:

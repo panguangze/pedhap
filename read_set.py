@@ -3,9 +3,9 @@ from pedigree import Trio
 
 class Read:
     def __init__(
-        self,
-        mapq: int,
-        block_id: int,
+            self,
+            mapq: int,
+            block_id: int,
     ):
         self.block_id = block_id
         self.mapq = mapq
@@ -13,7 +13,11 @@ class Read:
         self.blocks = []
         self.block_reverses = []
         self.uncertain_blocks = []
-    def set_covered_block(self, b_id: int, side: int):
+        self.support_situation = {0: [], 1: []}
+        self.confilict_side = 0
+
+    def set_covered_block(self, b_id: int, side: int, pos: int):
+        self.support_situation[side].append(pos)
         if b_id in self.covered_blocks.keys():
             item = self.covered_blocks[b_id]
         else:
@@ -32,6 +36,7 @@ class Read:
                 need_reverse = False
                 if v[1] > v[0]:
                     need_reverse = True
+                    self.confilict_side = 1;
                 self.blocks.append(k)
                 self.block_reverses.append(need_reverse)
         self.blocks.append(-self.block_id)
@@ -47,6 +52,7 @@ class ReadSet(object):
         self.father_dict = {}
         self.size_dict = {}
         self.uncertain_blocks = []
+        self.confilict_poses = []
 
     def contains_phasing_info(self):
         tag = False
@@ -54,7 +60,6 @@ class ReadSet(object):
             if v > 2:
                 tag = True
         return tag
-    
 
     def get_phase_id(self, block_id):
         if block_id not in self.reverse_info.keys():
@@ -65,6 +70,7 @@ class ReadSet(object):
     def add_read(self, read: Read):
         read.init_blocks()
         block_ids, reverses, uncertain_blocks = read.get_blocks_info()
+        self.confilict_poses = self.confilict_poses + read.support_situation[read.confilict_side]
         for b in uncertain_blocks:
             if b not in self.uncertain_blocks:
                 self.uncertain_blocks.append(b)
@@ -79,18 +85,19 @@ class ReadSet(object):
             b_id = block_ids[i]
             r = reverses[i]
             if b_id not in self.father_dict.keys():
-                self.father_dict[b_id] =b_id
+                self.father_dict[b_id] = b_id
                 self.size_dict[b_id] = 1
             self.reverse_info[b_id] = r
             self.union(b_id, first_block)
+
     # def add_block(self, block_id: int, need_reverse: bool):
     #     node = Node(block_id, need_reverse)
     #     if node in self.nodes_set:
 
     def find(self, node):
         father = self.father_dict[node]
-        if(node != father):
-            if father != self.father_dict[father]:    # 在降低树高优化时，确保父节点大小字典正确
+        if (node != father):
+            if father != self.father_dict[father]:  # 在降低树高优化时，确保父节点大小字典正确
                 self.size_dict[father] -= 1
             father = self.find(father)
         self.father_dict[node] = father
@@ -107,10 +114,10 @@ class ReadSet(object):
         a_head = self.find(node_a)
         b_head = self.find(node_b)
 
-        if(a_head != b_head):
+        if (a_head != b_head):
             a_set_size = self.size_dict[a_head]
             b_set_size = self.size_dict[b_head]
-            if(a_set_size >= b_set_size):
+            if (a_set_size >= b_set_size):
                 self.father_dict[b_head] = a_head
                 self.size_dict[a_head] = a_set_size + b_set_size
             else:

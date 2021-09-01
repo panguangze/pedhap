@@ -51,8 +51,14 @@ class Phaser(object):
         mom = trio.mom
         print(child.id, dad.id, mom.id)
 
-        self.phasing_duo(child.id, dad.id, chromo, side = 0)
-        self.phasing_duo(child.id, mom.id, chromo, side = 1)
+        # self.phasing_duo(child.id, dad.id, chromo, side = 0)
+        # self.phasing_duo(child.id, mom.id, chromo, side = 1)
+        v_t = self.chromo_variant_table[chromo]
+        f_confilict_poses = v_t.phase_with_hete(dad.id, child.id)
+        m_confilict_poses = v_t.phase_with_hete(mom.id, child.id)
+
+        insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
+        v_t.adjust_confilict(insect_poses,child.id)
 
     def phasing_trio_parent(self,trio: Trio, chromo):
         child = trio.child
