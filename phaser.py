@@ -54,7 +54,7 @@ class Phaser(object):
         # self.phasing_duo(child.id, dad.id, chromo, side = 0)
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
         v_t = self.chromo_variant_table[chromo]
-        f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
+        # f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
         m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
 
         # if f_confilict_poses and m_confilict_poses:
