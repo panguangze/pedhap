@@ -64,16 +64,16 @@ class Phaser(object):
         # fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
         # mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
 
-        f_m_insect = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
-        f_mh_insect = list(set(f_confilict_poses).intersection(set(mh_confilict_poses)))
-        fh_m_insect = list(set(fh_confilict_poses).intersection(set(m_confilict_poses)))
-        fh_mh_insect = list(set(fh_confilict_poses).intersection(set(mh_confilict_poses)))
-
-        insects = []
-        insects = insects+ f_m_insect
-        insects = insects+ f_mh_insect
-        insects = insects+ fh_m_insect
-        insects = insects+ fh_mh_insect
+        # f_m_insect = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
+        # f_mh_insect = list(set(f_confilict_poses).intersection(set(mh_confilict_poses)))
+        # fh_m_insect = list(set(fh_confilict_poses).intersection(set(m_confilict_poses)))
+        # fh_mh_insect = list(set(fh_confilict_poses).intersection(set(mh_confilict_poses)))
+        #
+        # insects = []
+        # insects = insects+ f_m_insect
+        # insects = insects+ f_mh_insect
+        # insects = insects+ fh_m_insect
+        # insects = insects+ fh_mh_insect
         # v_t.adjust_confilict(insects,child.id)
 
 

@@ -163,9 +163,9 @@ def parse_vcf_phase(vcf_file, CHROM, indels = False):
             el = line.strip().split('\t')
             if len(el) < 10:
                 continue
-            if len(el) != 10:
-                print("VCF file must be single-sample.")
-                exit(1)
+            # if len(el) != 10:
+            #     print("VCF file must be single-sample.")
+            #     exit(1)
 
             # get the index where the PS information is
             for i,f in enumerate(el[8].split(':')):
@@ -174,8 +174,8 @@ def parse_vcf_phase(vcf_file, CHROM, indels = False):
                 if f == 'PS':
                     if PS_index == None:
                         PS_index = i
-                    else:
-                        assert(PS_index == i)
+                    # else:
+                    #     assert(PS_index == i)
                     break
 
     if PS_index == None:
@@ -229,7 +229,7 @@ def parse_vcf_phase(vcf_file, CHROM, indels = False):
             if PS_index == None:
                 ps = 1    # put everything in one block
             elif consider and len(dat) > PS_index:
-                ps = dat[PS_index]
+                ps = dat[-1]
                 if ps == '.':
                     consider = False
 
