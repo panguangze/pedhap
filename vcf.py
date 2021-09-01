@@ -312,7 +312,7 @@ class VariantTable:
                     #         phase1.phase[0] = phase2.phase[1]
                     #         phase1.phase[1] = t
         homo_read_set.add_read(r)
-        # self.extend_by_readset(sample1, homo_read_set)
+        self.extend_by_readset(sample1, homo_read_set)
         return homo_read_set.confilict_poses
 
     def adjust_confilict(self,confilict_poses: [],sample: str):
@@ -378,7 +378,7 @@ class VariantTable:
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
-        # self.extend_by_readset(sample1, heter_read_set)
+        self.extend_by_readset(sample1, heter_read_set)
         return heter_read_set.confilict_poses
 
 
@@ -389,7 +389,7 @@ class VcfReader:
     def __init__(
         self,
         path: Union[str, PathLike],
-        indels: bool = False,
+        indels: bool = True,
         phases: bool = False,
         ignore_genotypes: bool = False,
         ploidy: int = None,
@@ -503,18 +503,18 @@ class VcfReader:
         for record in records:
             if not record.alts:
                 continue
-            if len(record.alts) > 1:
-                # Multi-ALT sites are not supported, yet
-                n_multi += 1
-                continue
+            # if len(record.alts) > 1:
+            #     # Multi-ALT sites are not supported, yet
+            #     n_multi += 1
+            #     continue
 
             pos, ref, alt = record.start, str(record.ref), str(record.alts[0])
             if len(ref) == len(alt) == 1:
                 n_snvs += 1
             else:
                 n_other += 1
-                if not self._indels:
-                    continue
+                # if not self._indels:
+                #     continue
 
             if (prev_position is not None) and (prev_position > pos):
                 raise VcfNotSortedError(
