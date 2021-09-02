@@ -325,6 +325,8 @@ class VariantTable:
             if phase1.is_homo():
                 continue
             if phase2.is_homo():
+                if phase1.position == 2402498:
+                    print("xxx")
                 if phase1.block_id != 0:
                     o_side = side
                     if phase2.phase[0] == phase1.phase[1]:
@@ -333,17 +335,17 @@ class VariantTable:
                         phase1.block_id, o_side,phase1.position)
                 else:
                     pass
-                    # phase1.block_id = -10101010
-                    # if side == 0:
-                    #     if phase1.phase[0] != phase2.phase[0]:
-                    #         t = phase1.phase[0]
-                    #         phase1.phase[0] = phase2.phase[1]
-                    #         phase1.phase[1] = t
-                    # else:
-                    #     if phase1.phase[0] == phase2.phase[0]:
-                    #         t = phase1.phase[0]
-                    #         phase1.phase[0] = phase2.phase[1]
-                    #         phase1.phase[1] = t
+                    phase1.block_id = -10101010
+                    if side == 0:
+                        if phase1.phase[0] != phase2.phase[0]:
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase1.phase[1]
+                            phase1.phase[1] = t
+                    else:
+                        if phase1.phase[0] == phase2.phase[0]:
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase1.phase[1]
+                            phase1.phase[1] = t
         homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
         return homo_read_set.confilict_poses
@@ -385,6 +387,8 @@ class VariantTable:
         for i, phase2 in enumerate(self.phases[sample2_index]):
             # target homo skip,
             phase1 = sample1_phases[i]
+            if phase1.position == 2889794:
+                print("xxx")
             if phase1.is_homo():
                 continue
             if phase2.is_homo():
@@ -406,8 +410,8 @@ class VariantTable:
                     phase1.block_id, o_side, phase1.position)
             else:
                 pass
-                # phase1.block_id = -phase2.block_id
-                # phase1.phase = phase2.phase
+                phase1.block_id = -phase2.block_id
+                phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
