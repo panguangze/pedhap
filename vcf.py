@@ -335,32 +335,20 @@ class VariantTable:
                         phase1.block_id, o_side,phase1.position)
                 else:
                     pass
-                    phase1.block_id = -10101010
-                    if side == 0:
-                        if phase1.phase[0] != phase2.phase[0]:
-                            t = phase1.phase[0]
-                            phase1.phase[0] = phase1.phase[1]
-                            phase1.phase[1] = t
-                    else:
-                        if phase1.phase[0] == phase2.phase[0]:
-                            t = phase1.phase[0]
-                            phase1.phase[0] = phase1.phase[1]
-                            phase1.phase[1] = t
-        homo_read_set.add_read(r)
+        #             phase1.block_id = -10101010
+        #             if side == 0:
+        #                 if phase1.phase[0] != phase2.phase[0]:
+        #                     t = phase1.phase[0]
+        #                     phase1.phase[0] = phase1.phase[1]
+        #                     phase1.phase[1] = t
+        #             else:
+        #                 if phase1.phase[0] == phase2.phase[0]:
+        #                     t = phase1.phase[0]
+        #                     phase1.phase[0] = phase1.phase[1]
+        #                     phase1.phase[1] = t
+        # homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
         return homo_read_set.confilict_poses
-
-    def adjust_confilict(self,confilict_poses: [],sample: str):
-        try:
-            sample_index = self._sample_to_index[sample]
-            sample1_phases = self.phases[sample_index]
-        except KeyError:
-            return
-        for i, phase in enumerate(sample1_phases):
-            if phase.position in confilict_poses:
-                tmp = phase.phase[0]
-                phase.phase[0] = phase.phase[1]
-                phase.phase[1] = tmp
 
     def phase_with_hete(
         self,
@@ -410,15 +398,25 @@ class VariantTable:
                     phase1.block_id, o_side, phase1.position)
             else:
                 pass
-                phase1.block_id = -phase2.block_id
-                phase1.phase = phase2.phase
+                # phase1.block_id = -phase2.block_id
+                # phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
         self.extend_by_readset(sample1, heter_read_set)
         return heter_read_set.confilict_poses
 
-
+    def adjust_confilict(self,confilict_poses: [],sample: str):
+        try:
+            sample_index = self._sample_to_index[sample]
+            sample1_phases = self.phases[sample_index]
+        except KeyError:
+            return
+        for i, phase in enumerate(sample1_phases):
+            if phase.position in confilict_poses:
+                tmp = phase.phase[0]
+                phase.phase[0] = phase.phase[1]
+                phase.phase[1] = tmp
 class VcfReader:
     """
     Read a VCF file chromosome by chromosome.

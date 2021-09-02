@@ -58,13 +58,12 @@ class Phaser(object):
         v_t.check_mendel_conflict(child.id, dad.id, mom.id)
         f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
         m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
+        fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
+        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
 
         # if f_confilict_poses and m_confilict_poses:
         #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
         #     v_t.adjust_confilict(insect_poses,child.id)
-
-        fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
-        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
 
         f_m_insect = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
         f_mh_insect = list(set(f_confilict_poses).intersection(set(mh_confilict_poses)))

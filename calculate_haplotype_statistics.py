@@ -815,6 +815,7 @@ def error_rate_calc(t_blocklist, a_blocklist, vcf_file, indels=False, phase_set=
             # a switch error is only possible in blocks len 4 or greater
             # this is because switches on the ends are counted as mismatches.
             # the -3 term: -1 because only between SNPs counts, and -2 for the two ends.
+            # print("phased_known",phased_known)
             if phased_known >= 4:
                 poss_sw += (phased_known - 3)
             # a mismatch can happen in any block length 2 or more, in any position.
@@ -862,6 +863,7 @@ def error_rate_calc(t_blocklist, a_blocklist, vcf_file, indels=False, phase_set=
     else:
         print("flip error count = ", flip_0_count)
         print("flip error locations = ", flip_0_loc)
+    print(poss_sw)
     total_error = error_result(ref=ref_name,
                                switch_count=switch_count,poss_sw=poss_sw, mismatch_count=mismatch_count,
                                poss_mm=poss_mm,flat_count=flat_count,poss_flat=poss_flat,

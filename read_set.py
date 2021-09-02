@@ -41,7 +41,7 @@ class Read:
         # if len(self.covered_blocks) <2:
         #     return
         for k, v in sorted(self.covered_blocks.items()):
-            if v[1] == v[0] or abs(v[1] - v[0]) <=8:
+            if v[1] == v[0] or abs(v[1] - v[0]) <=7:
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
