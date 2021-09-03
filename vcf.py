@@ -356,7 +356,7 @@ class VariantTable:
                     if phase1.position in self.mendel_cs:
                         continue
                     # if sample2_index == 2 and phase3.is_homo() and phase2.phase[0] == phase3.phase
-                    phase1.block_id = -10101010
+                    # phase1.block_id = -10101010
                     n_flip = 0
                     # if side == 0:
                     #     if phase1.phase[0] != phase2.phase[0]:
