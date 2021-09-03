@@ -41,7 +41,7 @@ class Read:
         # if len(self.covered_blocks) <2:
         #     return
         for k, v in sorted(self.covered_blocks.items()):
-            if v[1] == v[0] or abs(v[1] - v[0]) <=6:
+            if v[1] == v[0] or abs(v[1] - v[0]) <=4:
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
@@ -51,7 +51,7 @@ class Read:
                     self.confilict_side[k] = 0
                 self.blocks.append(k)
                 self.block_reverses.append(need_reverse)
-        self.blocks.append(-self.block_id)
+        self.blocks.append(self.block_id)
         self.block_reverses.append(False)
 
     def get_blocks_info(self):

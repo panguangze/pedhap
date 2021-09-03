@@ -272,11 +272,15 @@ class VariantTable:
         for i in sample1_phases:
             if i.block_id == 0:
                 continue
+            if i.position > 2500:
+                print("xxx")
             # if i.block_id in phase_info.keys():
             #     new_block_id = phase_info[i.block_id][0]
             #     need_r = phase_info[i.block_id][1]
             # else:
             new_block_id, need_r = read_set.get_phase_id(i.block_id)
+            if new_block_id == -4:
+                print("22")
             if new_block_id == 0:
                 if i.block_id in finalize_new_block_ids.keys():
                     finalize_new_block_id = finalize_new_block_ids[i.block_id]
@@ -394,7 +398,7 @@ class VariantTable:
             else:
                 quality = phase2.quality
             if phase2.block_id not in heter_read_map:
-                r = Read(mapq, phase2.block_id)
+                r = Read(mapq, -phase2.block_id)
                 heter_read_map[phase2.block_id] = r
             if phase1.block_id != 0:
                 o_side = side
@@ -410,6 +414,8 @@ class VariantTable:
                 #     unphase_poses[phase1.position] = 0
                 phase1.block_id = -phase2.block_id
                 phase1.phase = phase2.phase
+            if phase1.position == 2508:
+                print("xxxxxx")
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
