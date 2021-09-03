@@ -356,21 +356,21 @@ class VariantTable:
                     if phase1.position in self.mendel_cs:
                         continue
                     # if sample2_index == 2 and phase3.is_homo() and phase2.phase[0] == phase3.phase
-                    # phase1.block_id = -10101010
+                    phase1.block_id = -10101010
                     n_flip = 0
-                    # if side == 0:
-                    #     if phase1.phase[0] != phase2.phase[0]:
-                    #         # n_flip = 1
-                    #         t = phase1.phase[0]
-                    #         phase1.phase[0] = phase1.phase[1]
-                    #         phase1.phase[1] = t
-                    # else:
-                    #     if phase1.phase[0] == phase2.phase[0]:
-                    #         # n_flip = 1
-                    # # unphase_poses[phase1.position] = n_flip
-                    #         t = phase1.phase[0]
-                    #         phase1.phase[0] = phase1.phase[1]
-                    #         phase1.phase[1] = t
+                    if side == 0:
+                        if phase1.phase[0] != phase2.phase[0]:
+                            # n_flip = 1
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase1.phase[1]
+                            phase1.phase[1] = t
+                    else:
+                        if phase1.phase[0] == phase2.phase[0]:
+                            # n_flip = 1
+                    # unphase_poses[phase1.position] = n_flip
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase1.phase[1]
+                            phase1.phase[1] = t
         homo_read_set.add_read(r,prev_ensure_block)
         ensure_block = self.extend_by_readset(sample1, homo_read_set, side=side)
         return homo_read_set.confilict_poses, ensure_block
@@ -428,12 +428,12 @@ class VariantTable:
                 #     unphase_poses[phase1.position] = 1
                 # else:
                 #     unphase_poses[phase1.position] = 0
-                # if phase1.position in self.mendel_cs:
-                #     continue
-                # if {phase1.phase[0], phase1.phase[1]} != {phase2.phase[1], phase2.phase[0]}:
-                #     continue
-                # phase1.block_id = -phase2.block_id
-                # phase1.phase = phase2.phase
+                if phase1.position in self.mendel_cs:
+                    continue
+                if {phase1.phase[0], phase1.phase[1]} != {phase2.phase[1], phase2.phase[0]}:
+                    continue
+                phase1.block_id = -phase2.block_id
+                phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
