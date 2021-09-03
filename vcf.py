@@ -429,6 +429,17 @@ class VariantTable:
         self.extend_by_readset(sample1, heter_read_set)
         return heter_read_set.confilict_poses, unphase_poses
 
+    def flip(self, sample):
+        try:
+            sample_index = self._sample_to_index[sample]
+            sample1_phases = self.phases[sample_index]
+        except KeyError:
+            return
+        for i, phase in enumerate(sample1_phases):
+            tmp = phase.phase[0]
+            phase.phase[0] = phase.phase[1]
+            phase.phase[1] = tmp
+
     def adjust_confilict(self,confilict_poses, sample: str):
         try:
             sample_index = self._sample_to_index[sample]
