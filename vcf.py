@@ -423,17 +423,17 @@ class VariantTable:
                 heter_read_map[phase2.block_id].set_covered_block(
                     phase1.block_id, o_side, phase1.position)
             else:
-                # pass
+                pass
                 # if phase1.phase[0] == phase2.phase[1]:
                 #     unphase_poses[phase1.position] = 1
                 # else:
                 #     unphase_poses[phase1.position] = 0
-                if phase1.position in self.mendel_cs:
-                    continue
-                if {phase1.phase[0], phase1.phase[1]} != {phase1.phase[1], phase1.phase[0]}:
-                    continue
-                phase1.block_id = -phase2.block_id
-                phase1.phase = phase2.phase
+                # if phase1.position in self.mendel_cs:
+                #     continue
+                # if {phase1.phase[0], phase1.phase[1]} != {phase1.phase[1], phase1.phase[0]}:
+                #     continue
+                # phase1.block_id = -phase2.block_id
+                # phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
