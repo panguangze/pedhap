@@ -79,6 +79,10 @@ def main():
         '--max_round', help='max phasing iter times, if not given, decided by program', 
         required=False, default=0, type=int,
         dest='max_round')
+    parser.add_argument(
+        '--support_c', help='max phasing iter times, if not given, decided by program',
+        required=False, default=6, type=int,
+        dest='support_c')
     args = parser.parse_args()
 
     phaser = Phaser(vcf_file=args.vcf_file, out_file=args.out_file, max_round = int(args.max_round))

@@ -90,7 +90,7 @@ class Phaser(object):
         insects = insects+ fh_mh_insect
         v_t.adjust_confilict(insects, child.id)
 
-        v_t.flip(child.id)
+        # v_t.flip(child.id)
 
 
 # if fh_confilict_poses and mh_confilict_poses:

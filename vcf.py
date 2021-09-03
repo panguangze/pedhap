@@ -152,6 +152,7 @@ class VariantTable:
         self.phase_tags: List[bool] = [True for _ in samples]
         self._sample_to_index = {
             sample: index for index, sample in enumerate(samples)}
+        self.mendel_cs = []
 
     def __len__(self) -> int:
         return len(self.phases[0])
@@ -167,14 +168,14 @@ class VariantTable:
             m_phases = self.phases[m_index]
         except KeyError:
                 return
-        mendelian_conflicts = []
+        # mendelian_conflicts = []
         for index, (gt_mother, gt_father, gt_child) in enumerate(
                 zip(m_phases, f_phases, c_phases)
         ):
             # if (not gt_mother.phase) and (not gt_father.is_none()) and (not gt_child.is_none()):
             if mendelian_conflict(gt_mother.phase, gt_father.phase, gt_child.phase):
-                mendelian_conflicts.append(gt_child.position)
-        logger.info(f"{len(mendelian_conflicts)} for contig {self.chromosome}")
+                self.mendel_cs.append(gt_child.position)
+        logger.info(f"{len(self.mendel_cs)} for contig {self.chromosome}")
         # return mendelian_conflicts
 
     def write(self, s, out):
@@ -347,6 +348,8 @@ class VariantTable:
                         phase1.block_id, o_side,phase1.position)
                 else:
                     # pass
+                    if phase1.position in self.mendel_cs:
+                        continue
                     phase1.block_id = -10101010
                     n_flip = 0
                     if side == 0:
@@ -419,10 +422,12 @@ class VariantTable:
                 #     unphase_poses[phase1.position] = 1
                 # else:
                 #     unphase_poses[phase1.position] = 0
+                if phase1.position in self.mendel_cs:
+                    continue
+                if {phase1.phase[0], phase1.phase[1]} != {phase1.phase[1], phase1.phase[0]}:
+                    continue
                 phase1.block_id = -phase2.block_id
                 phase1.phase = phase2.phase
-            if phase1.position == 2508:
-                print("xxxxxx")
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
