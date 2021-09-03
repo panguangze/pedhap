@@ -348,7 +348,7 @@ class VariantTable:
                     if phase2.phase[0] == phase1.phase[1]:
                         o_side = abs(side - 1)
                     if phase2.phase[0] != 0:
-                        value = 1.2
+                        value = 1
                     r.set_covered_block(
                         phase1.block_id, o_side,phase1.position,value)
                 else:
