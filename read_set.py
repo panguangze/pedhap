@@ -37,11 +37,17 @@ class Read:
         else:
             item[1] = item[1] + 1
 
-    def init_blocks(self):
+    def init_blocks(self, ensure_block = None):
         # if len(self.covered_blocks) <2:
         #     return
         for k, v in sorted(self.covered_blocks.items()):
-            if v[1] == v[0] or abs(v[1] - v[0]) <=4:
+            if ensure_block != None and k == ensure_block[0]:
+                if ensure_block[1] == 0:
+                    self.confilict_side[k] = 1
+                    self.block_reverses.append(False)
+                    self.blocks.append(k)
+                    continue
+            if v[1] == v[0] or (abs(v[1] - v[0]) <=3 and v[1] != 0 and v[0] != 0):
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
@@ -79,8 +85,8 @@ class ReadSet(object):
         else:
             return (self.find(block_id), self.reverse_info[block_id])
 
-    def add_read(self, read: Read):
-        read.init_blocks()
+    def add_read(self, read: Read, ensure_block = None):
+        read.init_blocks(ensure_block)
         block_ids, reverses, uncertain_blocks = read.get_blocks_info()
         self.confilict_poses = self.confilict_poses + read.get_confilict_poses()
         for b in uncertain_blocks:

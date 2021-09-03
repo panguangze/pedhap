@@ -254,7 +254,7 @@ class VariantTable:
 
     # TODO: extend this to polyploid case
 
-    def extend_by_readset(self, s1: str, read_set: ReadSet):
+    def extend_by_readset(self, s1: str, read_set: ReadSet, side = -1):
         # read_set.finalize()
         try:
             sample1_index = self._sample_to_index[s1]
@@ -269,11 +269,10 @@ class VariantTable:
             return
         # phase_info = {}
         finalize_new_block_ids = {}
+        ensure_block =[]
         for i in sample1_phases:
             if i.block_id == 0:
                 continue
-            if i.position > 2500:
-                print("xxx")
             # if i.block_id in phase_info.keys():
             #     new_block_id = phase_info[i.block_id][0]
             #     need_r = phase_info[i.block_id][1]
@@ -299,13 +298,21 @@ class VariantTable:
                 t = i.phase[0]
                 i.phase[0] = i.phase[1]
                 i.phase[1] = t
-        # print("end")
+        print("end")
+        for k,v in finalize_new_block_ids.items():
+            if k != v:
+                ensure_block.append(v)
+                ensure_block.append(side)
+                break
+        return ensure_block
+
 
 
     def phase_with_homo(
         self,
         sample1: str,
         sample2: str,
+        prev_ensure_block = None,
         default_quality: int = 20,
         mapq: int = 100,
         side: int = 0,
@@ -355,9 +362,9 @@ class VariantTable:
                             t = phase1.phase[0]
                             phase1.phase[0] = phase1.phase[1]
                             phase1.phase[1] = t
-        homo_read_set.add_read(r)
-        self.extend_by_readset(sample1, homo_read_set)
-        return homo_read_set.confilict_poses, unphase_poses
+        homo_read_set.add_read(r,prev_ensure_block)
+        ensure_block = self.extend_by_readset(sample1, homo_read_set, side=side)
+        return homo_read_set.confilict_poses, ensure_block
 
     def phase_with_hete(
         self,
