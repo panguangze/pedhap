@@ -314,6 +314,7 @@ class VariantTable:
         sample1: str,
         sample2: str,
         prev_ensure_block = None,
+        hete_confilic_poses = None,
         default_quality: int = 20,
         mapq: int = 100,
         side: int = 0,
@@ -335,6 +336,7 @@ class VariantTable:
         unphase_poses = {}
         for i, phase2 in enumerate(self.phases[sample2_index]):
             phase1 = sample1_phases[i]
+            # phase3 = self.phases[3][i]
             if phase1.is_homo():
                 continue
             if phase2.is_homo():
@@ -342,14 +344,18 @@ class VariantTable:
                     print("xxx")
                 if phase1.block_id != 0:
                     o_side = side
+                    value = 1
                     if phase2.phase[0] == phase1.phase[1]:
                         o_side = abs(side - 1)
+                    if phase2.phase[0] != 0:
+                        value = 1.2
                     r.set_covered_block(
-                        phase1.block_id, o_side,phase1.position)
+                        phase1.block_id, o_side,phase1.position,value)
                 else:
                     # pass
                     if phase1.position in self.mendel_cs:
                         continue
+                    # if sample2_index == 2 and phase3.is_homo() and phase2.phase[0] == phase3.phase
                     phase1.block_id = -10101010
                     n_flip = 0
                     if side == 0:

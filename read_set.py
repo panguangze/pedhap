@@ -22,7 +22,7 @@ class Read:
             res = res + self.support_situation[k][self.confilict_side[k]]
         return res
 
-    def set_covered_block(self, b_id: int, side: int, pos: int):
+    def set_covered_block(self, b_id: int, side: int, pos: int, value=1):
         # self.support_situation[side].append(pos)
         if b_id in self.covered_blocks.keys():
             item = self.covered_blocks[b_id]
@@ -33,9 +33,9 @@ class Read:
             item = self.covered_blocks[b_id]
         self.support_situation[b_id][side].append(pos)
         if side == 0:
-            item[0] = item[0] + 1
+            item[0] = item[0] + value
         else:
-            item[1] = item[1] + 1
+            item[1] = item[1] + value
 
     def init_blocks(self, ensure_block = None):
         # if len(self.covered_blocks) <2:
@@ -47,7 +47,7 @@ class Read:
                     self.block_reverses.append(False)
                     self.blocks.append(k)
                     continue
-            if v[1] == v[0] or (abs(v[1] - v[0]) <=10 and v[1] != 0 and v[0] != 0):
+            if v[1] == v[0] or (abs(v[1] - v[0]) <6 and v[1] != 0 and v[0] != 0):
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
