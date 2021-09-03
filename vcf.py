@@ -320,6 +320,7 @@ class VariantTable:
             # return
         homo_read_set = ReadSet()
         r = Read(mapq, -10101010)
+        unphase_poses = {}
         for i, phase2 in enumerate(self.phases[sample2_index]):
             phase1 = sample1_phases[i]
             if phase1.is_homo():
@@ -334,21 +335,25 @@ class VariantTable:
                     r.set_covered_block(
                         phase1.block_id, o_side,phase1.position)
                 else:
-                    pass
-        #             phase1.block_id = -10101010
-        #             if side == 0:
-        #                 if phase1.phase[0] != phase2.phase[0]:
-        #                     t = phase1.phase[0]
-        #                     phase1.phase[0] = phase1.phase[1]
-        #                     phase1.phase[1] = t
-        #             else:
-        #                 if phase1.phase[0] == phase2.phase[0]:
-        #                     t = phase1.phase[0]
-        #                     phase1.phase[0] = phase1.phase[1]
-        #                     phase1.phase[1] = t
-        # homo_read_set.add_read(r)
+                    # pass
+                    phase1.block_id = -10101010
+                    n_flip = 0
+                    if side == 0:
+                        if phase1.phase[0] != phase2.phase[0]:
+                            # n_flip = 1
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase1.phase[1]
+                            phase1.phase[1] = t
+                    else:
+                        if phase1.phase[0] == phase2.phase[0]:
+                            # n_flip = 1
+                    # unphase_poses[phase1.position] = n_flip
+                            t = phase1.phase[0]
+                            phase1.phase[0] = phase1.phase[1]
+                            phase1.phase[1] = t
+        homo_read_set.add_read(r)
         self.extend_by_readset(sample1, homo_read_set)
-        return homo_read_set.confilict_poses
+        return homo_read_set.confilict_poses, unphase_poses
 
     def phase_with_hete(
         self,
@@ -372,6 +377,7 @@ class VariantTable:
             return
         # input_variant_set = set(input_variants)
         heter_read_map: Dict[int, Read] = {}  # maps block_id core.Read objects
+        unphase_poses = {}
         for i, phase2 in enumerate(self.phases[sample2_index]):
             # target homo skip,
             phase1 = sample1_phases[i]
@@ -397,16 +403,20 @@ class VariantTable:
                 heter_read_map[phase2.block_id].set_covered_block(
                     phase1.block_id, o_side, phase1.position)
             else:
-                pass
-                # phase1.block_id = -phase2.block_id
-                # phase1.phase = phase2.phase
+                # pass
+                # if phase1.phase[0] == phase2.phase[1]:
+                #     unphase_poses[phase1.position] = 1
+                # else:
+                #     unphase_poses[phase1.position] = 0
+                phase1.block_id = -phase2.block_id
+                phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
             heter_read_set.add_read(read)
         self.extend_by_readset(sample1, heter_read_set)
-        return heter_read_set.confilict_poses
+        return heter_read_set.confilict_poses, unphase_poses
 
-    def adjust_confilict(self,confilict_poses: [],sample: str):
+    def adjust_confilict(self,confilict_poses, sample: str):
         try:
             sample_index = self._sample_to_index[sample]
             sample1_phases = self.phases[sample_index]
@@ -417,6 +427,8 @@ class VariantTable:
                 tmp = phase.phase[0]
                 phase.phase[0] = phase.phase[1]
                 phase.phase[1] = tmp
+            # elif phase.position in unphased_flip_situation[0]:
+            #     phase.
 class VcfReader:
     """
     Read a VCF file chromosome by chromosome.

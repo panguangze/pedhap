@@ -56,10 +56,23 @@ class Phaser(object):
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
         v_t: VariantTable = self.chromo_variant_table[chromo]
         v_t.check_mendel_conflict(child.id, dad.id, mom.id)
-        f_confilict_poses = v_t.phase_with_hete(child.id, dad.id)
-        m_confilict_poses = v_t.phase_with_hete(child.id, mom.id)
-        fh_confilict_poses = v_t.phase_with_homo(child.id, dad.id, side=0)
-        mh_confilict_poses = v_t.phase_with_homo(child.id, mom.id, side=1)
+        f_confilict_poses, f_unposes = v_t.phase_with_hete(child.id, dad.id)
+        m_confilict_poses, m_unposes = v_t.phase_with_hete(child.id, mom.id)
+        fh_confilict_poses, fh_unposes = v_t.phase_with_homo(child.id, dad.id, side=0)
+        mh_confilict_poses, mh_unposes = v_t.phase_with_homo(child.id, mom.id, side=1)
+
+        # f_all = dict(f_unposes.items() + fh_unposes.items())
+        # m_all = dict(m_unposes.items() + mh_unposes.items())
+
+        # unphased_flip_situation = {0:[],1:[]}
+        # for k,v in f_all.items():
+        #     if k in m_all.keys() and v == m_all[k]:
+        #         if v == 1:
+        #             unphased_flip_situation[1].append(k)
+        #         else:
+        #             unphased_flip_situation[0].append(k)
+                
+
 
         # if f_confilict_poses and m_confilict_poses:
         #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
@@ -75,7 +88,7 @@ class Phaser(object):
         insects = insects+ f_mh_insect
         insects = insects+ fh_m_insect
         insects = insects+ fh_mh_insect
-        v_t.adjust_confilict(insects,child.id)
+        v_t.adjust_confilict(insects, child.id)
 
 
 # if fh_confilict_poses and mh_confilict_poses:
