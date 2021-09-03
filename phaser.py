@@ -34,9 +34,9 @@ class Phaser(object):
 
     def check_phasing_state(self,chromo):
         v_t = self.chromo_variant_table[chromo]
-        # for t in v_t.phase_tags:
-        #     if t:
-        #         return True
+        for t in v_t.phase_tags:
+            if t:
+                return True
         return v_t.phase_tags[0]
 
     def _read_vcf(self):
