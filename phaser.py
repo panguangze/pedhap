@@ -58,8 +58,8 @@ class Phaser(object):
         v_t.check_mendel_conflict(child.id, dad.id, mom.id)
         f_confilict_poses, f_unposes = v_t.phase_with_hete(child.id, dad.id)
         m_confilict_poses, m_unposes = v_t.phase_with_hete(child.id, mom.id)
-        mh_confilict_poses, mh_ensure_block = v_t.phase_with_homo(child.id, mom.id, side=1)
-        fh_confilict_poses, fh_ensure_block = v_t.phase_with_homo(child.id, dad.id,prev_ensure_block=mh_ensure_block, side=0)
+        fh_confilict_poses, fh_ensure_block = v_t.phase_with_homo(child.id, dad.id,side=0)
+        mh_confilict_poses, mh_ensure_block = v_t.phase_with_homo(child.id, mom.id,prev_ensure_block=fh_ensure_block,  side=1)
 
 
         # f_all = dict(f_unposes.items() + fh_unposes.items())

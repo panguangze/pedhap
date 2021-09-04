@@ -42,7 +42,7 @@ class Read:
         #     return
         for k, v in sorted(self.covered_blocks.items()):
             if ensure_block != None and k == ensure_block[0]:
-                if ensure_block[1] == 1:
+                if ensure_block[1] == 0:
                     self.confilict_side[k] = 1
                     self.block_reverses.append(False)
                     self.blocks.append(k)
