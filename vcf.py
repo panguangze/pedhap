@@ -264,10 +264,10 @@ class VariantTable:
             return
         if len(read_set.uncertain_blocks) != 0:
             logger.info(f"{s1}, {len(read_set.uncertain_blocks)} blocks covered but uncertain in this round")
-        if not read_set.contains_phasing_info():
-            self.phase_tags[sample1_index] = False
-            logger.info(f"No certain info provided, {s1} unphased in this round")
-            return
+        # if not read_set.contains_phasing_info():
+        #     self.phase_tags[sample1_index] = False
+        #     logger.info(f"No certain info provided, {s1} unphased in this round")
+        #     return
         # phase_info = {}
         finalize_new_block_ids = {}
         ensure_block =[]

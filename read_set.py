@@ -42,12 +42,12 @@ class Read:
         #     return
         for k, v in sorted(self.covered_blocks.items()):
             if ensure_block != None and k == ensure_block[0]:
-                if ensure_block[1] == 0:
+                if ensure_block[1] == 1:
                     self.confilict_side[k] = 1
                     self.block_reverses.append(False)
                     self.blocks.append(k)
                     continue
-            if v[1] == v[0] or (abs(v[1] - v[0]) <15 and v[1] != 0 and v[0] != 0) or (abs(v[1] - v[0]) <7 and (v[1] == 0 or v[0] == 0)):
+            if v[1] == v[0] or (abs(v[1] - v[0]) <10 and v[1] != 0 and v[0] != 0) or (abs(v[1] - v[0]) <4 and (v[1] == 0 or v[0] == 0)):
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
