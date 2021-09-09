@@ -305,6 +305,9 @@ class VariantTable:
                 ensure_block.append(v)
                 ensure_block.append(side)
                 break
+        if len(ensure_block) == 0:
+            ensure_block.append(finalize_new_block_ids[0])
+            ensure_block.append(side)
         return ensure_block
 
 
@@ -340,8 +343,8 @@ class VariantTable:
             if phase1.is_homo():
                 continue
             if phase2.is_homo():
-                if phase1.position == 2402498:
-                    print("xxx")
+                # if phase1.position == 2402498:
+                #     print("xxx")
                 if phase1.block_id != 0:
                     o_side = side
                     value = 1
