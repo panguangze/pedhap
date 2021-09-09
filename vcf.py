@@ -305,7 +305,7 @@ class VariantTable:
                 ensure_block.append(v)
                 ensure_block.append(side)
                 break
-        if len(ensure_block) == 0:
+        if len(ensure_block) == 0 and len(finalize_new_block_ids) != 0:
             f_keys = list(finalize_new_block_ids.keys())
             ensure_block.append(f_keys[0])
             ensure_block.append(side)
