@@ -306,7 +306,8 @@ class VariantTable:
                 ensure_block.append(side)
                 break
         if len(ensure_block) == 0:
-            ensure_block.append(finalize_new_block_ids[0])
+            f_keys = list(finalize_new_block_ids.keys())
+            ensure_block.append(f_keys[0])
             ensure_block.append(side)
         return ensure_block
 
@@ -404,8 +405,8 @@ class VariantTable:
         for i, phase2 in enumerate(self.phases[sample2_index]):
             # target homo skip,
             phase1 = sample1_phases[i]
-            if phase1.position == 2889794:
-                print("xxx")
+            # if phase1.position == 2889794:
+            #     print("xxx")
             if phase1.is_homo():
                 continue
             if phase2.is_homo():
