@@ -16,6 +16,8 @@ class Phaser(object):
         indels: bool = True,
         max_coverage: int = 15,
         tag: str = "PS",
+        threshold1: int = 2,
+        threshold2: int = 0,
     ) -> None:
         super().__init__()
         self.vcf_file = vcf_file
@@ -31,6 +33,8 @@ class Phaser(object):
         self._reader_iter = iter(self._variant_file)
         self._unprocessed_record: Optional[VariantRecord] = None
         self._read_vcf()
+        self.threshold1 = threshold1
+        self.threshold2 = threshold2
 
     def check_phasing_state(self,chromo):
         v_t = self.chromo_variant_table[chromo]
@@ -56,10 +60,10 @@ class Phaser(object):
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
         v_t: VariantTable = self.chromo_variant_table[chromo]
         v_t.check_mendel_conflict(child.id, dad.id, mom.id)
-        f_confilict_poses, f_unposes = v_t.phase_with_hete(child.id, dad.id)
-        m_confilict_poses, m_unposes = v_t.phase_with_hete(child.id, mom.id)
-        fh_confilict_poses, fh_ensure_block = v_t.phase_with_homo(child.id, dad.id,side=0)
-        mh_confilict_poses, mh_ensure_block = v_t.phase_with_homo(child.id, mom.id,prev_ensure_block=fh_ensure_block,  side=1)
+        f_confilict_poses, f_unposes = v_t.phase_with_hete(child.id, dad.id, threshold1=self.threshold1, threshold2=self.threshold2)
+        m_confilict_poses, m_unposes = v_t.phase_with_hete(child.id, mom.id, threshold1=self.threshold1, threshold2=self.threshold2)
+        fh_confilict_poses, fh_ensure_block = v_t.phase_with_homo(child.id, dad.id,side=0, threshold1=self.threshold1, threshold2=self.threshold2)
+        mh_confilict_poses, mh_ensure_block = v_t.phase_with_homo(child.id, mom.id,prev_ensure_block=fh_ensure_block, side=1, threshold1=self.threshold1, threshold2=self.threshold2)
 
 
         # f_all = dict(f_unposes.items() + fh_unposes.items())

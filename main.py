@@ -76,6 +76,10 @@ def main():
     parser.add_argument(
         '-o', help='out phased vcf file', required=True, dest='out_file')
     parser.add_argument(
+        '--threshold1', help='merge conflict blocks threshold', required=False,type=int, default=2)
+    parser.add_argument(
+        '--threshold2', help='merge unconflict blocks threshold', required=False,type=int, default=0)
+    parser.add_argument(
         '--max_round', help='max phasing iter times, if not given, decided by program', 
         required=False, default=0, type=int,
         dest='max_round')
@@ -85,7 +89,7 @@ def main():
         dest='support_c')
     args = parser.parse_args()
 
-    phaser = Phaser(vcf_file=args.vcf_file, out_file=args.out_file, max_round = int(args.max_round))
+    phaser = Phaser(vcf_file=args.vcf_file, out_file=args.out_file, max_round = int(args.max_round), threshold1=args.threshold1, threshold2=args.threshold2)
     families = ped.open_ped(args.ped_file)
     for f in families:
         all_trios = ped_utils.get_trios(f)

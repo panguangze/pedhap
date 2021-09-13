@@ -322,6 +322,8 @@ class VariantTable:
         default_quality: int = 20,
         mapq: int = 100,
         side: int = 0,
+        threshold1: int = 2,
+        threshold2: int = 0,
     ):
         try:
             sample1_index = self._sample_to_index[sample1]
@@ -336,7 +338,7 @@ class VariantTable:
             logging.info(f"Skip phasing {sample1} with {sample2} due to both of them unchanged in prev round")
             # return
         homo_read_set = ReadSet()
-        r = Read(mapq, -10101010)
+        r = Read(mapq, -10101010, threshold1=threshold1, threshold2=threshold2)
         unphase_poses = {}
         for i, phase2 in enumerate(self.phases[sample2_index]):
             phase1 = sample1_phases[i]
@@ -386,6 +388,8 @@ class VariantTable:
         default_quality: int = 20,
         mapq: int = 100,
         side: int = 0,
+        threshold1: int = 2,
+        threshold2: int = 0,
     ):
         try:
             sample1_index = self._sample_to_index[sample1]
@@ -418,7 +422,7 @@ class VariantTable:
             else:
                 quality = phase2.quality
             if phase2.block_id not in heter_read_map:
-                r = Read(mapq, -phase2.block_id)
+                r = Read(mapq, -phase2.block_id, threshold1=threshold1, threshold2=threshold2)
                 heter_read_map[phase2.block_id] = r
             if phase1.block_id != 0:
                 o_side = side
