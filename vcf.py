@@ -322,8 +322,8 @@ class VariantTable:
         default_quality: int = 20,
         mapq: int = 100,
         side: int = 0,
-        threshold1: int = 2,
-        threshold2: int = 0,
+        threshold1: float = 0.1,
+        threshold2: float = 0,
     ):
         try:
             sample1_index = self._sample_to_index[sample1]
@@ -388,8 +388,8 @@ class VariantTable:
         default_quality: int = 20,
         mapq: int = 100,
         side: int = 0,
-        threshold1: int = 2,
-        threshold2: int = 0,
+        threshold1: float = 0.1,
+        threshold2: float = 0,
     ):
         try:
             sample1_index = self._sample_to_index[sample1]

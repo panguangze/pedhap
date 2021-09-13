@@ -16,8 +16,8 @@ class Phaser(object):
         indels: bool = True,
         max_coverage: int = 15,
         tag: str = "PS",
-        threshold1: int = 2,
-        threshold2: int = 0,
+        threshold1: float = 0.1,
+        threshold2: float = 0,
     ) -> None:
         super().__init__()
         self.vcf_file = vcf_file

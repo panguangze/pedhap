@@ -76,9 +76,9 @@ def main():
     parser.add_argument(
         '-o', help='out phased vcf file', required=True, dest='out_file')
     parser.add_argument(
-        '--threshold1', help='merge conflict blocks threshold', required=False,type=int, default=2)
+        '--threshold1', help='merge conflict blocks threshold', required=False,type=float, default=0.1)
     parser.add_argument(
-        '--threshold2', help='merge unconflict blocks threshold', required=False,type=int, default=0)
+        '--threshold2', help='merge unconflict blocks threshold', required=False, type=float, default=0)
     parser.add_argument(
         '--max_round', help='max phasing iter times, if not given, decided by program', 
         required=False, default=0, type=int,

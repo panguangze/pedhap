@@ -6,8 +6,8 @@ class Read:
             self,
             mapq: int,
             block_id: int,
-            threshold1: int = 2,
-            threshold2: int = 0,
+            threshold1: float = 0.1,
+            threshold2: float = 0,
     ):
         self.block_id = block_id
         self.mapq = mapq
@@ -51,7 +51,7 @@ class Read:
                     self.block_reverses.append(False)
                     self.blocks.append(k)
                     continue
-            if v[1] == v[0] or (abs(v[1] - v[0]) < self.threshold1 and v[1] != 0 and v[0] != 0) or ( abs(v[1]- v[0]) < self.threshold2 and (v[1] == 0 or v[0] == 0)):
+            if v[1] == v[0] or (abs(v[1] - v[0]) / (v[1] + v[0])  <= self.threshold1 and v[1] != 0 and v[0] != 0) or ( abs(v[1]- v[0]) <= self.threshold2 and (v[1] == 0 or v[0] == 0)):
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
