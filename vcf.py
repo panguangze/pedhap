@@ -343,7 +343,11 @@ class VariantTable:
         for i, phase2 in enumerate(self.phases[sample2_index]):
             phase1 = sample1_phases[i]
             # phase3 = self.phases[3][i]
+            if phase1.position == 4786:
+                print("xxx")
             if phase1.is_homo():
+                continue
+            if phase1.position in self.mendel_cs:
                 continue
             if phase2.is_homo():
                 # if phase1.position == 2402498:
@@ -359,8 +363,6 @@ class VariantTable:
                         phase1.block_id, o_side,phase1.position,value)
                 else:
                     # pass
-                    if phase1.position in self.mendel_cs:
-                        continue
                     # if sample2_index == 2 and phase3.is_homo() and phase2.phase[0] == phase3.phase
                     phase1.block_id = -10101010
                     n_flip = 0
@@ -421,6 +423,8 @@ class VariantTable:
                 quality = default_quality
             else:
                 quality = phase2.quality
+            if phase1.position in self.mendel_cs:
+                continue
             if phase2.block_id not in heter_read_map:
                 r = Read(mapq, -phase2.block_id, threshold1=threshold1, threshold2=threshold2)
                 heter_read_map[phase2.block_id] = r
@@ -436,8 +440,6 @@ class VariantTable:
                 #     unphase_poses[phase1.position] = 1
                 # else:
                 #     unphase_poses[phase1.position] = 0
-                if phase1.position in self.mendel_cs:
-                    continue
                 if {phase1.phase[0], phase1.phase[1]} != {phase2.phase[1], phase2.phase[0]}:
                     continue
                 phase1.block_id = -phase2.block_id
@@ -578,6 +580,8 @@ class VcfReader:
 
     @staticmethod
     def _extract_GT_PS_phase(call, pos) -> Optional[VariantCallPhase]:
+        if pos == 4792:
+            print("ddd")
         if call.get("PS", 0) is None:
             block_id = 0
         else:
@@ -619,7 +623,7 @@ class VcfReader:
                 warn_once(
                     logger, "Skipping duplicated position %s on chromosome %r", pos + 1, chromosome
                 )
-                continue
+                # continue
             prev_position = pos
 
             # Read phasing information (allow GT/PS or HP phase information, but not both),

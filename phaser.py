@@ -126,7 +126,11 @@ class Phaser(object):
             for sample in v_t.samples:
                 sample_phases[sample] = {}
                 for p in v_t.phases[v_t._sample_to_index[sample]]:
-                    sample_phases[sample][p.position] = p
+                    if p.position in sample_phases[sample].keys():
+                        # negative for dup pos
+                        sample_phases[sample][-p.position] = p
+                    else:
+                        sample_phases[sample][p.position] = p
             prev_pos = None
             for record in self._record_modifier(chromo):
                 pos = record.start
@@ -136,8 +140,10 @@ class Phaser(object):
                 #     # we do not phase multiallelic sites currently
                 #     continue
                 if pos == prev_pos:
+                    # pass
+                    pos = -pos
                     # duplicate position, skip it
-                    continue
+                    # continue
 
                 for sample in v_t.samples:
                     call = record.samples[sample]
