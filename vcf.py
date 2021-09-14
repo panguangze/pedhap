@@ -466,6 +466,8 @@ class VariantTable:
         except KeyError:
             return
         for i, phase in enumerate(sample1_phases):
+            if phase.position in self.mendel_cs:
+                continue
             if phase.position in confilict_poses:
                 tmp = phase.phase[0]
                 phase.phase[0] = phase.phase[1]
