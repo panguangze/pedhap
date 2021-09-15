@@ -157,13 +157,13 @@ class Phaser(object):
                     # continue
 
                 for sample in v_t.samples:
+                    phase_info = sample_phases[sample][pos]
                     call = record.samples[sample]
                     flip_info = False
-                    if call.get("PS", 0) is not None and call['PS'] != 0:
-                        block_id = call['PS']
+                    if call.get("PS", 0) is not None and phase_info.block_id != 0:
+                        block_id = phase_info.block_id
                         if sample_flip[sample][block_id][1] < sample_flip[sample][block_id][0]:
                             flip_info = True
-                    phase_info = sample_phases[sample][pos]
                     self._set_PS(
                         call, phase_info, flip_info)
                 prev_pos = pos
@@ -181,12 +181,15 @@ class Phaser(object):
     ):
         # assert all(allele in [0, 1] for allele in phase.phase)
         call["PS"] = phase.block_id
-        # tmp = phase.phase
+        tmp = []
+        tmp.append(phase.phase[0])
+        tmp.append(phase.phase[1])
         if flip_info:
-            tmp = phase.phase[0]
-            phase.phase[0] = phase.phase[1]
-            phase.phase[1] = tmp
-        call["GT"] = tuple(phase.phase)
+            tmp[0] = phase.phase[1]
+            tmp[1] = phase.phase[0]
+            # phase.phase[0] = phase.phase[1]
+            # phase.phase[1] = tmp
+        call["GT"] = tuple(tmp)
         if phase.is_homo():
             call.phased = False
         if phase.block_id != 0:
