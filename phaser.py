@@ -160,7 +160,7 @@ class Phaser(object):
                     flip_info = False
                     if call.get("PS", 0) is not None and call['PS'] != 0:
                         block_id = call.get("PS", 0)
-                        if sample_flip[sample][block_id][1] > sample_flip[sample][block_id][0]:
+                        if sample_flip[sample][block_id][1] < sample_flip[sample][block_id][0]:
                             flip_info = True
                     phase_info = sample_phases[sample][pos]
                     self._set_PS(
@@ -180,7 +180,7 @@ class Phaser(object):
     ):
         # assert all(allele in [0, 1] for allele in phase.phase)
         call["PS"] = phase.block_id
-        tmp = phase.phase
+        # tmp = phase.phase
         if flip_info:
             tmp = phase.phase[0]
             phase.phase[0] = phase.phase[1]
