@@ -123,9 +123,19 @@ class Phaser(object):
     def write(self):
         for chromo, v_t in self.chromo_variant_table.items():
             sample_phases: Dict[str, Dict] = dict()
+            sample_flip: Dict[str, Dict] = dict()
             for sample in v_t.samples:
                 sample_phases[sample] = {}
+                sample_flip[sample] = {}
                 for p in v_t.phases[v_t._sample_to_index[sample]]:
+                    if p.block_id != 0:
+                        if p.block_id in sample_flip[sample]:
+                            sample_flip[sample][p.block_id][0] = sample_flip[sample][p.block_id][0] + p.phase[0]
+                            sample_flip[sample][p.block_id][1] = sample_flip[sample][p.block_id][1] + p.phase[1]
+                        else:
+                            sample_flip[sample][p.block_id] = [0,0]
+                            sample_flip[sample][p.block_id][0] = p.phase[0]
+                            sample_flip[sample][p.block_id][1] = p.phase[1]
                     if p.position in sample_phases[sample].keys():
                         # negative for dup pos
                         sample_phases[sample][-p.position] = p
@@ -147,9 +157,14 @@ class Phaser(object):
 
                 for sample in v_t.samples:
                     call = record.samples[sample]
+                    flip_info = False
+                    if call.get("PS", 0) is not None and call['PS'] != 0:
+                        block_id = call.get("PS", 0)
+                        if sample_flip[sample][block_id][1] > sample_flip[sample][block_id][0]:
+                            flip_info = True
                     phase_info = sample_phases[sample][pos]
                     self._set_PS(
-                        call, phase_info)
+                        call, phase_info, flip_info)
                 prev_pos = pos
 
     def _record_modifier(self, chromosome: str):
@@ -160,10 +175,16 @@ class Phaser(object):
     def _set_PS(
         self,
         call,
-        phase: VariantCallPhase
+        phase: VariantCallPhase,
+        flip_info,
     ):
         # assert all(allele in [0, 1] for allele in phase.phase)
         call["PS"] = phase.block_id
+        tmp = phase.phase
+        if flip_info:
+            tmp = phase.phase[0]
+            phase.phase[0] = phase.phase[1]
+            phase.phase[1] = tmp
         call["GT"] = tuple(phase.phase)
         if phase.is_homo():
             call.phased = False
