@@ -142,6 +142,7 @@ class Phaser(object):
                     else:
                         sample_phases[sample][p.position] = p
             prev_pos = None
+            print(sample_flip)
             for record in self._record_modifier(chromo):
                 pos = record.start
                 if not record.alts:
@@ -159,7 +160,7 @@ class Phaser(object):
                     call = record.samples[sample]
                     flip_info = False
                     if call.get("PS", 0) is not None and call['PS'] != 0:
-                        block_id = call.get("PS", 0)
+                        block_id = call['PS']
                         if sample_flip[sample][block_id][1] < sample_flip[sample][block_id][0]:
                             flip_info = True
                     phase_info = sample_phases[sample][pos]
