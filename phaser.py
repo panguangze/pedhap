@@ -139,11 +139,12 @@ class Phaser(object):
                             sample_flip[sample][p.block_id][0] = p.phase[0]
                             sample_flip[sample][p.block_id][1] = p.phase[1]
                     if  pos in prev_pos:
-                        pos = pos + "D"
+                        pos = prev_pos + "D"
                         # negative for dup pos
                         sample_phases[sample][pos] = p
                     else:
                         sample_phases[sample][pos] = p
+                    print(prev_pos)
                     prev_pos = pos
             prev_pos = ""
             # print(sample_flip)
@@ -156,7 +157,7 @@ class Phaser(object):
                 #     continue
                 if pos in prev_pos:
                     # pass
-                    pos = pos + "D"
+                    pos = prev_pos + "D"
                     # duplicate position, skip it
                     # continue
 
@@ -170,6 +171,7 @@ class Phaser(object):
                             flip_info = True
                     self._set_PS(
                         call, phase_info, flip_info)
+                print(pos)
                 prev_pos = pos
 
     def _record_modifier(self, chromosome: str):
