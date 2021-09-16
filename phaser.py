@@ -54,7 +54,7 @@ class Phaser(object):
         child = trio.child
         dad = trio.dad
         mom = trio.mom
-        print(child.id, dad.id, mom.id)
+        # print(child.id, dad.id, mom.id)
 
         # self.phasing_duo(child.id, dad.id, chromo, side = 0)
         # self.phasing_duo(child.id, mom.id, chromo, side = 1)
@@ -107,7 +107,7 @@ class Phaser(object):
         child = trio.child
         dad = trio.dad
         mom = trio.mom
-        print(child.id, dad.id, mom.id)
+        # print(child.id, dad.id, mom.id)
 
         self.phasing_duo(dad.id, child.id, chromo, side = 0)
         self.phasing_duo(mom.id, child.id, chromo, side = 0)
@@ -124,10 +124,12 @@ class Phaser(object):
         for chromo, v_t in self.chromo_variant_table.items():
             sample_phases: Dict[str, Dict] = dict()
             sample_flip: Dict[str, Dict] = dict()
+            prev_pos = ""
             for sample in v_t.samples:
                 sample_phases[sample] = {}
                 sample_flip[sample] = {}
                 for p in v_t.phases[v_t._sample_to_index[sample]]:
+                    pos = str(p.position)
                     if p.block_id != 0:
                         if p.block_id in sample_flip[sample]:
                             sample_flip[sample][p.block_id][0] = sample_flip[sample][p.block_id][0] + p.phase[0]
@@ -136,23 +138,25 @@ class Phaser(object):
                             sample_flip[sample][p.block_id] = [0,0]
                             sample_flip[sample][p.block_id][0] = p.phase[0]
                             sample_flip[sample][p.block_id][1] = p.phase[1]
-                    if p.position in sample_phases[sample].keys():
+                    if  pos in prev_pos:
+                        pos = pos + "D"
                         # negative for dup pos
-                        sample_phases[sample][-p.position] = p
+                        sample_phases[sample][pos] = p
                     else:
-                        sample_phases[sample][p.position] = p
-            prev_pos = None
-            print(sample_flip)
+                        sample_phases[sample][pos] = p
+                    prev_pos = pos
+            prev_pos = ""
+            # print(sample_flip)
             for record in self._record_modifier(chromo):
-                pos = record.start
+                pos = str(record.start)
                 if not record.alts:
                     continue
                 # if len(record.alts) > 1:
                 #     # we do not phase multiallelic sites currently
                 #     continue
-                if pos == prev_pos:
+                if pos in prev_pos:
                     # pass
-                    pos = -pos
+                    pos = pos + "D"
                     # duplicate position, skip it
                     # continue
 

@@ -279,8 +279,6 @@ class VariantTable:
             #     need_r = phase_info[i.block_id][1]
             # else:
             new_block_id, need_r = read_set.get_phase_id(i.block_id)
-            if new_block_id == -4:
-                print("22")
             if new_block_id == 0:
                 if i.block_id in finalize_new_block_ids.keys():
                     finalize_new_block_id = finalize_new_block_ids[i.block_id]
@@ -299,7 +297,6 @@ class VariantTable:
                 t = i.phase[0]
                 i.phase[0] = i.phase[1]
                 i.phase[1] = t
-        print("end")
         for k,v in finalize_new_block_ids.items():
             if k != v:
                 ensure_block.append(v)
@@ -343,8 +340,6 @@ class VariantTable:
         for i, phase2 in enumerate(self.phases[sample2_index]):
             phase1 = sample1_phases[i]
             # phase3 = self.phases[3][i]
-            if phase1.position == 4786:
-                print("xxx")
             if phase1.is_homo():
                 continue
             if phase1.position in self.mendel_cs:
@@ -580,8 +575,6 @@ class VcfReader:
 
     @staticmethod
     def _extract_GT_PS_phase(call, pos) -> Optional[VariantCallPhase]:
-        if pos == 4792:
-            print("ddd")
         if call.get("PS", 0) is None:
             block_id = 0
         else:
