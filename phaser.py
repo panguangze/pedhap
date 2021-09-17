@@ -124,8 +124,8 @@ class Phaser(object):
         for chromo, v_t in self.chromo_variant_table.items():
             sample_phases: Dict[str, Dict] = dict()
             sample_flip: Dict[str, Dict] = dict()
-            prev_pos = ""
             for sample in v_t.samples:
+                prev_pos = ""
                 sample_phases[sample] = {}
                 sample_flip[sample] = {}
                 for p in v_t.phases[v_t._sample_to_index[sample]]:
@@ -144,7 +144,7 @@ class Phaser(object):
                         sample_phases[sample][pos] = p
                     else:
                         sample_phases[sample][pos] = p
-                    print(prev_pos)
+                    # print(prev_pos)
                     prev_pos = pos
             prev_pos = ""
             # print(sample_flip)
@@ -171,7 +171,6 @@ class Phaser(object):
                             flip_info = True
                     self._set_PS(
                         call, phase_info, flip_info)
-                print(pos)
                 prev_pos = pos
 
     def _record_modifier(self, chromosome: str):
