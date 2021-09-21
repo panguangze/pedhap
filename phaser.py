@@ -190,7 +190,7 @@ class Phaser(object):
         tmp = []
         tmp.append(phase.phase[0])
         tmp.append(phase.phase[1])
-        if False:
+        if flip_info:
             tmp[0] = phase.phase[1]
             tmp[1] = phase.phase[0]
             # phase.phase[0] = phase.phase[1]
