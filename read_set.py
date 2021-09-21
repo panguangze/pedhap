@@ -51,7 +51,7 @@ class Read:
                     self.block_reverses.append(False)
                     self.blocks.append(k)
                     continue
-            if v[1] == v[0] or (abs(v[1] - v[0]) / (v[1] + v[0])  <= self.threshold1 and v[1] != 0 and v[0] != 0) or ( abs(v[1]- v[0]) <= self.threshold2 and (v[1] == 0 or v[0] == 0)):
+            if v[1] == v[0] or (v[1] != 0 and v[0] != 0 and abs(max(v)/min(v)) <= self.threshold1) or ( abs(v[1]- v[0]) <= self.threshold2 and (v[1] == 0 or v[0] == 0)):
                 self.uncertain_blocks.append(k)
             else:
                 need_reverse = False
