@@ -302,6 +302,7 @@ class VariantTable:
                 ensure_block.append(v)
                 ensure_block.append(side)
                 break
+        print(ensure_block, side)
         if len(ensure_block) == 0 and len(finalize_new_block_ids) != 0:
             f_keys = list(finalize_new_block_ids.keys())
             ensure_block.append(f_keys[0])
@@ -375,7 +376,9 @@ class VariantTable:
                             phase1.phase[0] = phase1.phase[1]
                             phase1.phase[1] = t
         homo_read_set.add_read(r,prev_ensure_block)
+        print(homo_read_set.reverse_info,"44444")
         ensure_block = self.extend_by_readset(sample1, homo_read_set, side=side)
+        print(ensure_block)
         return homo_read_set.confilict_poses, ensure_block
 
     def phase_with_hete(
@@ -441,7 +444,10 @@ class VariantTable:
                 phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
+            print(read.covered_blocks, "ccc")
             heter_read_set.add_read(read)
+            print(heter_read_set.reverse_info,"ddd")
+
         self.extend_by_readset(sample1, heter_read_set)
         return heter_read_set.confilict_poses, unphase_poses
 

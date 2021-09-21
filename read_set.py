@@ -92,6 +92,7 @@ class ReadSet(object):
     def add_read(self, read: Read, ensure_block = None):
         read.init_blocks(ensure_block)
         block_ids, reverses, uncertain_blocks = read.get_blocks_info()
+        print(block_ids, "ccss")
         self.confilict_poses = self.confilict_poses + read.get_confilict_poses()
         for b in uncertain_blocks:
             if b not in self.uncertain_blocks:
@@ -105,6 +106,7 @@ class ReadSet(object):
         # 记录block是否反转并且加入uf
         for i in range(0, len(block_ids)):
             b_id = block_ids[i]
+            print(block_ids,"3333")
             r = reverses[i]
             if b_id not in self.father_dict.keys():
                 self.father_dict[b_id] = b_id

@@ -1,4 +1,5 @@
 import sys
+from utils import FastaNotIndexedError
 from ped_utils import Trio
 from typing import Dict, Iterable, List, Optional, TextIO, Tuple
 from vcf import VariantCallPhase, VariantTable
@@ -189,7 +190,7 @@ class Phaser(object):
         tmp = []
         tmp.append(phase.phase[0])
         tmp.append(phase.phase[1])
-        if flip_info:
+        if False:
             tmp[0] = phase.phase[1]
             tmp[1] = phase.phase[0]
             # phase.phase[0] = phase.phase[1]
