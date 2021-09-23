@@ -423,8 +423,14 @@ class VariantTable:
                 heter_read_map[phase2.block_id] = r
             if phase1.block_id != 0:
                 o_side = side
-                if phase2.phase[0] == phase1.phase[1]:
-                    o_side = abs(side-1)
+                if {phase1.phase[0], phase1.phase[1]} != {phase2.phase[1], phase2.phase[0]}:
+                    if phase2.phase[0] == phase1.phase[1] or phase2.phase[1] == phase1.phase[0]:
+                        o_side = abs(side-1)
+                    elif phase2.phase[0] == phase1.phase[0] or phase2.phase[1] == phase1.phase[1]:
+                        o_side = abs(side)
+                else:
+                    if phase2.phase[0] == phase1.phase[1]:
+                        o_side = abs(side-1)
                 heter_read_map[phase2.block_id].set_covered_block(
                     phase1.block_id, o_side, phase1.position)
             else:
