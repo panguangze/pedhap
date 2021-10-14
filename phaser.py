@@ -67,33 +67,16 @@ class Phaser(object):
         mh_confilict_poses, mh_ensure_block = v_t.phase_with_homo(child.id, mom.id,prev_ensure_block=fh_ensure_block, side=1, threshold1=self.threshold1, threshold2=self.threshold2)
 
 
-        # f_all = dict(f_unposes.items() + fh_unposes.items())
-        # m_all = dict(m_unposes.items() + mh_unposes.items())
-
-        # unphased_flip_situation = {0:[],1:[]}
-        # for k,v in f_all.items():
-        #     if k in m_all.keys() and v == m_all[k]:
-        #         if v == 1:
-        #             unphased_flip_situation[1].append(k)
-        #         else:
-        #             unphased_flip_situation[0].append(k)
-
-
-
-        # if f_confilict_poses and m_confilict_poses:
-        #     insect_poses = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
-        #     v_t.adjust_confilict(insect_poses,child.id)
-
         f_m_insect = list(set(f_confilict_poses).intersection(set(m_confilict_poses)))
         f_mh_insect = list(set(f_confilict_poses).intersection(set(mh_confilict_poses)))
         fh_m_insect = list(set(fh_confilict_poses).intersection(set(m_confilict_poses)))
         fh_mh_insect = list(set(fh_confilict_poses).intersection(set(mh_confilict_poses)))
 
         insects = []
-        insects = insects+ f_m_insect
-        insects = insects+ f_mh_insect
-        insects = insects+ fh_m_insect
-        insects = insects+ fh_mh_insect
+        insects = insects+ f_m_insect + f_mh_insect + fh_m_insect + fh_mh_insect
+        # insects = insects+ f_mh_insect
+        # insects = insects+ fh_m_insect
+        # insects = insects+ fh_mh_insect
         v_t.adjust_confilict(insects, child.id)
 
         # v_t.flip(child.id)

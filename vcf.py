@@ -128,6 +128,7 @@ class VariantCallPhase:
     phase: List[int]  # alleles representing the phasing. (1, 0) is 1|0
     quality: Optional[int]
     position: int
+    bnd: int
 
     def is_homo(self):
         return self.phase[0] == self.phase[1]
@@ -371,9 +372,7 @@ class VariantTable:
                             phase1.phase[0] = phase1.phase[1]
                             phase1.phase[1] = t
         homo_read_set.add_read(r,prev_ensure_block)
-        print(homo_read_set.reverse_info,"44444")
         ensure_block = self.extend_by_readset(sample1, homo_read_set, side=side)
-        print(ensure_block)
         return homo_read_set.confilict_poses, ensure_block
 
     def phase_with_hete(
@@ -445,9 +444,7 @@ class VariantTable:
                 phase1.phase = phase2.phase
         heter_read_set = ReadSet()
         for k, read in heter_read_map.items():
-            print(read.covered_blocks, "ccc")
             heter_read_set.add_read(read)
-            print(heter_read_set.reverse_info,"ddd")
 
         self.extend_by_readset(sample1, heter_read_set)
         return heter_read_set.confilict_poses, unphase_poses
@@ -587,7 +584,7 @@ class VcfReader:
         else:
             block_id = call.get("PS", 0)
         phase = list(call["GT"])
-        return VariantCallPhase(block_id=block_id, phase=phase, quality=call.get("PQ", None), position=pos)
+        return VariantCallPhase(block_id=block_id, phase=phase, quality=call.get("PQ", None), position=pos, bnd=0)
 
     def _process_single_chromosome(self, chromosome: str, records) -> VariantTable:
         phase_detected = None
@@ -645,6 +642,8 @@ class VcfReader:
                                 "and HP fields)"
                             )
                         phase = p
+                        if '[' in alt or ']' in alt:
+                            phase.bnd = 1
                         # check for ploidy consistency and limits
                         phase_ploidy = len(p.phase)
 
@@ -653,7 +652,6 @@ class VcfReader:
                         elif self.ploidy is None:
                             self.ploidy = phase_ploidy
                         elif phase_ploidy != self.ploidy:
-                            print("phase= {}".format(phase))
                             raise PloidyError(
                                 "Phasing information contains inconsistent ploidy ({} and "
                                 "{})".format(self.ploidy, phase_ploidy)

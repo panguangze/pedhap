@@ -22,7 +22,6 @@ def main():
     # chromos=["1"]
     chromos = c_vcf.contigs.keys()
     hete_infos = {}
-    print('fectch')
     for chromo in chromos:
         tmp = {}
         try:
